@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35506.116 d17.12
+VisualStudioVersion = 17.12.35506.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{CC42E9CF-8E65-4772-BAF5-41B3C4A07688}"
 EndProject
@@ -22,6 +22,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanArchitecture.Infrastructure", "CleanArchitecture.Infrastructure\CleanArchitecture.Infrastructure.csproj", "{26744196-EB15-483F-A50C-065EF3E9E661}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanArchitecture.Persistence", "CleanArchitecture.Persistence\CleanArchitecture.Persistence.csproj", "{1793D859-ACE8-401B-96C6-CB700DFFB95F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanArchitecture.Api", "CleanArchitecture.Api\CleanArchitecture.Api.csproj", "{ACDA6A9F-5C53-497B-9DFA-7F1096969347}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{1793D859-ACE8-401B-96C6-CB700DFFB95F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1793D859-ACE8-401B-96C6-CB700DFFB95F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1793D859-ACE8-401B-96C6-CB700DFFB95F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACDA6A9F-5C53-497B-9DFA-7F1096969347}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACDA6A9F-5C53-497B-9DFA-7F1096969347}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACDA6A9F-5C53-497B-9DFA-7F1096969347}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACDA6A9F-5C53-497B-9DFA-7F1096969347}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -58,5 +64,6 @@ Global
 		{DA53A3E2-E54E-4B23-BF47-3999E904F229} = {E27B87D2-6D12-40FE-894F-9CC7E39C25EC}
 		{26744196-EB15-483F-A50C-065EF3E9E661} = {6654C8FC-01A9-432E-9175-72F6CEDA1A90}
 		{1793D859-ACE8-401B-96C6-CB700DFFB95F} = {6654C8FC-01A9-432E-9175-72F6CEDA1A90}
+		{ACDA6A9F-5C53-497B-9DFA-7F1096969347} = {72E389EB-59A5-42C1-9C5C-2744D8FA3103}
 	EndGlobalSection
 EndGlobal
