@@ -16,7 +16,7 @@ namespace CleanArchitecture.Api.Filters
                 var apiResult = new ApiResult<object>(true, ApiResultStatusCode.Success, okObjectResult.Value);
                 context.Result = new JsonResult(apiResult) { StatusCode = okObjectResult.StatusCode };
             }
-            else if (context.Result is OkResult okResult)
+            else if (context.Result is OkResult okResult) 
             {
                 var apiResult = new ApiResult(true, ApiResultStatusCode.Success);
                 context.Result = new JsonResult(apiResult) { StatusCode = okResult.StatusCode };
