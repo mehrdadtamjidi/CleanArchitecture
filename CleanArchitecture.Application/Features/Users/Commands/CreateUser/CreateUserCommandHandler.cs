@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CleanArchitecture.Application.Common.Exceptions;
 using CleanArchitecture.Application.Contracts.Persistence;
 using CleanArchitecture.Application.DTOs.Users;
 using CleanArchitecture.Application.Responses;
@@ -23,13 +24,16 @@ namespace CleanArchitecture.Application.Features.Users.Commands.CreateUser
         }
         public async Task<ApiResult<CreateUserDto>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
-            var validator = new CreateUserCommandValidator();
-            var validationResult = await validator.ValidateAsync(request);
+            //var validator = new CreateUserCommandValidator();
+            //var validationResult = await validator.ValidateAsync(request);
 
-            if (validationResult.IsValid == false) 
-            {
-                throw new Exception();
-            }
+            //if (validationResult.IsValid == false) 
+            //{
+            //    if (!validationResult.IsValid)
+            //    {
+            //        throw new ValidationException(validationResult.Errors);
+            //    }
+            //}
 
             throw new NotImplementedException();
         }

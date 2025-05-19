@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
-using Microsoft.AspNetCore.Builder;
-using Newtonsoft.Json.Serialization;
 using CleanArchitecture.Application.Common.Exceptions;
-
+using CleanArchitecture.Application.Responses;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace CleanArchitecture.Api.Framework.Middlewares
 {
@@ -16,16 +19,17 @@ namespace CleanArchitecture.Api.Framework.Middlewares
         {
             return builder.UseMiddleware<GlobalExceptionMiddleware>();
         }
-
     }
 
     public class GlobalExceptionMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly IHostEnvironment _env;
 
-        public GlobalExceptionMiddleware(RequestDelegate next)
+        public GlobalExceptionMiddleware(RequestDelegate next, IHostEnvironment env)
         {
             _next = next;
+            _env = env;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -40,52 +44,52 @@ namespace CleanArchitecture.Api.Framework.Middlewares
             }
         }
 
-        private static async Task HandleExceptionAsync(HttpContext context, Exception exception)
+        private async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            string controllerName = context.Request.RouteValues["controller"]?.ToString();
-            string actionName = context.Request.RouteValues["action"]?.ToString();
-
             context.Response.ContentType = "application/json";
 
             int statusCode;
-            int apiStatusCode = 0;
+            ApiResultStatusCode apiStatusCode;
+            string message;
 
-            if (exception is AppException appException)
+            if (exception is ValidationException validationException)
+            {
+                statusCode = (int)HttpStatusCode.BadRequest;
+                apiStatusCode = ApiResultStatusCode.BadRequest;
+
+                var allErrors = validationException.Errors
+                    .SelectMany(e => e.Value)
+                    .Distinct()
+                    .ToList();
+
+                message = string.Join(" | ", allErrors);
+            }
+            else if (exception is AppException appException)
             {
                 statusCode = (int)appException.HttpStatusCode;
-                apiStatusCode = (int)appException.ApiStatusCode;
+                apiStatusCode = appException.ApiStatusCode;
+                message = appException.Message;
             }
             else
             {
                 statusCode = (int)HttpStatusCode.InternalServerError;
-                apiStatusCode = 0;
+                apiStatusCode = ApiResultStatusCode.ServerError;
+
+                message = _env.IsDevelopment()
+                    ? $"{exception.Message} | {exception.StackTrace}"
+                    : "An unexpected error occurred.";
             }
 
             context.Response.StatusCode = statusCode;
 
-            var errorModel = new ErrorResponseModel
-            {
-                IsSuccess = false,
-                StatusCode = apiStatusCode,
-                Message = exception.Message + exception.StackTrace,
-                DateTime = DateTime.Now
-            };
-
-            var serializerSettings = new JsonSerializerSettings
+            var result = new ApiResult(false, apiStatusCode, message);
+            var settings = new JsonSerializerSettings
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             };
 
-            var json = JsonConvert.SerializeObject(errorModel, serializerSettings);
+            var json = JsonConvert.SerializeObject(result, settings);
             await context.Response.WriteAsync(json);
         }
-
-    }
-    public class ErrorResponseModel
-    {
-        public bool IsSuccess { get; set; }
-        public int StatusCode { get; set; }
-        public string Message { get; set; }
-        public DateTime DateTime { get; set; }
     }
 }

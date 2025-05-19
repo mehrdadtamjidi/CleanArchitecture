@@ -56,7 +56,7 @@ namespace CleanArchitecture.Api.Framework.Configuration
                     OnAuthenticationFailed = context =>
                     {
                         if (context.Exception != null)
-                            throw new AppException(ApiResultStatusCode.UnAuthorized, "خطای احراز هویت", HttpStatusCode.Unauthorized);
+                            throw new AppException(ApiResultStatusCode.UnAuthorized, "Authentication failed", HttpStatusCode.Unauthorized);
 
                         return Task.CompletedTask;
                     },

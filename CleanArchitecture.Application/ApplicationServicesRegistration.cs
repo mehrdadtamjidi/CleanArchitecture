@@ -1,5 +1,7 @@
-﻿using CleanArchitecture.Application.CustomMapping;
+﻿using CleanArchitecture.Application.Common.Behaviors;
+using CleanArchitecture.Application.CustomMapping;
 using FluentValidation;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -16,14 +18,15 @@ namespace CleanArchitecture.Application
         {
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
-            #region Register AutoMapper
+            // FluentValidation: Register all validators in this assembly
             services.InitializeAutoMapper();
-            #endregion
 
-            #region Register MediatR
+            // MediatR: Register request handlers
             services.AddMediatR(cfg =>
                 cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
-            #endregion
+
+            // MediatR Pipeline: Add validation behavior globally
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
         }
     }
 }
