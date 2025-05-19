@@ -5,6 +5,7 @@ using CleanArchitecture.Application.Contracts.Persistence;
 using CleanArchitecture.Application.Responses;
 using CleanArchitecture.Persistence.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Net;
@@ -23,14 +24,15 @@ namespace CleanArchitecture.Api.Framework.Configuration
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
+            })
+            .AddJwtBearer(options =>
             {
                 var secretkey = Encoding.UTF8.GetBytes(jwtSettings.SecretKey);
                 var encryptionkey = Encoding.UTF8.GetBytes(jwtSettings.Encryptkey);
 
                 var validationParameters = new TokenValidationParameters
                 {
-                    ClockSkew = TimeSpan.Zero, // default: 5 min
+                    ClockSkew = TimeSpan.Zero,
                     RequireSignedTokens = true,
 
                     ValidateIssuerSigningKey = true,
@@ -39,10 +41,10 @@ namespace CleanArchitecture.Api.Framework.Configuration
                     RequireExpirationTime = true,
                     ValidateLifetime = true,
 
-                    ValidateAudience = true, //default : false
+                    ValidateAudience = true,
                     ValidAudience = jwtSettings.Audience,
 
-                    ValidateIssuer = true, //default : false
+                    ValidateIssuer = true,
                     ValidIssuer = jwtSettings.Issuer,
 
                     TokenDecryptionKey = new SymmetricSecurityKey(encryptionkey)
@@ -51,43 +53,81 @@ namespace CleanArchitecture.Api.Framework.Configuration
                 options.RequireHttpsMetadata = false;
                 options.SaveToken = true;
                 options.TokenValidationParameters = validationParameters;
+
                 options.Events = new JwtBearerEvents
                 {
                     OnAuthenticationFailed = context =>
                     {
-                        if (context.Exception != null)
-                            throw new AppException(ApiResultStatusCode.UnAuthorized, "Authentication failed", HttpStatusCode.Unauthorized);
+                        var endpoint = context.HttpContext.GetEndpoint();
+                        var isAnonymous = endpoint?.Metadata?.GetMetadata<IAllowAnonymous>() != null;
 
-                        return Task.CompletedTask;
+                        if (isAnonymous)
+                        {
+                            context.NoResult();
+                            return Task.CompletedTask;
+                        }
+
+                        throw new AppException(ApiResultStatusCode.UnAuthorized, "Authentication failed", HttpStatusCode.Unauthorized);
                     },
+
                     OnTokenValidated = async context =>
                     {
-                        var userRepository = context.HttpContext.RequestServices.GetRequiredService<IUserRepository>();
+                        var endpoint = context.HttpContext.GetEndpoint();
+                        var isAnonymous = endpoint?.Metadata?.GetMetadata<IAllowAnonymous>() != null;
 
+                        if (isAnonymous)
+                        {
+                            return;
+                        }
+
+                        var userRepository = context.HttpContext.RequestServices.GetRequiredService<IUserRepository>();
                         var claimsIdentity = context.Principal.Identity as ClaimsIdentity;
+
                         if (claimsIdentity.Claims?.Any() != true)
+                        {
                             context.Fail("This token has no claims.");
+                            return;
+                        }
 
                         var securityStamp = claimsIdentity.FindFirstValue(new ClaimsIdentityOptions().SecurityStampClaimType);
                         if (!securityStamp.HasValue())
-                            context.Fail("This token has no secuirty stamp");
+                        {
+                            context.Fail("This token has no security stamp");
+                            return;
+                        }
 
-                        //Find user and token from database and perform your custom validation
                         var userId = claimsIdentity.GetUserId<int>();
                         var user = await userRepository.GetByIdAsync(context.HttpContext.RequestAborted, userId);
 
-                        if (user.SecurityStamp != securityStamp)
-                           context.Fail("Token secuirty stamp is not valid.");
+                        if (user == null || user.SecurityStamp != securityStamp)
+                        {
+                            context.Fail("Token security stamp is not valid.");
+                            return;
+                        }
                     },
+
                     OnChallenge = context =>
                     {
+                        var endpoint = context.HttpContext.GetEndpoint();
+                        var isAnonymous = endpoint?.Metadata?.GetMetadata<IAllowAnonymous>() != null;
+
+                        if (isAnonymous)
+                        {
+                            context.HandleResponse();
+                            return Task.CompletedTask;
+                        }
+
                         if (context.AuthenticateFailure != null)
+                        {
                             throw new AppException(ApiResultStatusCode.UnAuthorized, "خطای احراز هویت", HttpStatusCode.OK, context.AuthenticateFailure, null);
+                        }
+
                         throw new AppException(ApiResultStatusCode.UnAuthorized, "خطای احراز هویت", HttpStatusCode.Unauthorized);
                     }
                 };
             });
         }
+
 
         public static void AddCustomApiVersioning(this IServiceCollection services)
         {
