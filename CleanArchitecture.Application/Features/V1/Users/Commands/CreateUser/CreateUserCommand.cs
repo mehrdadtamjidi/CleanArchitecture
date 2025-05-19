@@ -1,4 +1,4 @@
-﻿using CleanArchitecture.Application.DTOs.Users;
+﻿using CleanArchitecture.Application.DTOs.V1.Users;
 using CleanArchitecture.Application.Responses;
 using MediatR;
 using System;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CleanArchitecture.Application.Features.Users.Commands.CreateUser
+namespace CleanArchitecture.Application.Features.V1.Users.Commands.CreateUser
 {
     public class CreateUserCommand : IRequest<ApiResult<CreateUserDto>>
     {

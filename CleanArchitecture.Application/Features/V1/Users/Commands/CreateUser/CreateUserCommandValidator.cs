@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FluentValidation;
 
-namespace CleanArchitecture.Application.Features.Users.Commands.CreateUser
+namespace CleanArchitecture.Application.Features.V1.Users.Commands.CreateUser
 {
     public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
     {

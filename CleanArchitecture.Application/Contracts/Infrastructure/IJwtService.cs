@@ -1,4 +1,4 @@
-﻿using CleanArchitecture.Application.DTOs.Users;
+﻿using CleanArchitecture.Application.DTOs.V1.Users;
 using System;
 using System.Collections.Generic;
 using System.Linq;

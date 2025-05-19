@@ -1,6 +1,6 @@
 ﻿using CleanArchitecture.Application.Common;
 using CleanArchitecture.Application.Contracts.Infrastructure;
-using CleanArchitecture.Application.DTOs.Users;
+using CleanArchitecture.Application.DTOs.V1.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;

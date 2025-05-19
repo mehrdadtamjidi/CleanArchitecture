@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CleanArchitecture.Application.Features.Users.Queries.GetUser
+namespace CleanArchitecture.Application.Features.V1.Users.Queries.GetUser
 {
     public class GetUserQueryValidator : AbstractValidator<GetUserQuery>
     {
