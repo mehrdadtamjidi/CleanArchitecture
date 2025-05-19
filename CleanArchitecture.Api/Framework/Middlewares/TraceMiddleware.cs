@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using System.Reflection.Emit;
 using CleanArchitecture.Application.Common.Trace;
 
-namespace CleanArchitecture.Api.Middlewares
+namespace CleanArchitecture.Api.Framework.Middlewares
 {
     public static class TraceMiddlewareExtensions
     {

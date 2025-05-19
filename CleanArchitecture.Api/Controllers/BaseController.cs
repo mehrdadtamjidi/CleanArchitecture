@@ -1,4 +1,4 @@
-﻿using CleanArchitecture.Api.Filters;
+﻿using CleanArchitecture.Api.Framework.Filters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

@@ -6,7 +6,7 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using FilterDescriptor = Microsoft.AspNetCore.Mvc.Filters.FilterDescriptor;
 
-namespace CleanArchitecture.Api.Swagger
+namespace CleanArchitecture.Api.Framework.Swagger
 {
     public class UnauthorizedResponsesOperationFilter : IOperationFilter
     {

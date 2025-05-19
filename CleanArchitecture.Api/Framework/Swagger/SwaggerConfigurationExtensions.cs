@@ -15,7 +15,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using CleanArchitecture.Application.Common;
 
-namespace CleanArchitecture.Api.Swagger
+namespace CleanArchitecture.Api.Framework.Swagger
 {
     public static class SwaggerConfigurationExtensions
     {

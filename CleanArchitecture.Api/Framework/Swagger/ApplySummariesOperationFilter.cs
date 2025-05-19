@@ -7,7 +7,7 @@ using Pluralize.NET;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 
-namespace CleanArchitecture.Api.Swagger
+namespace CleanArchitecture.Api.Framework.Swagger
 {
     public class ApplySummariesOperationFilter : IOperationFilter
     {
@@ -26,12 +26,12 @@ namespace CleanArchitecture.Api.Swagger
 
             if (IsGetAllAction())
             {
-                if (!StringExtensions.HasValue(operation.Summary))
+                if (!operation.Summary.HasValue())
                     operation.Summary = $"Returns all {pluralizeName}";
             }
             else if (IsActionName("Post", "Create"))
             {
-                if (!StringExtensions.HasValue(operation.Summary))
+                if (!operation.Summary.HasValue())
                     operation.Summary = $"Creates a {singularizeName}";
 
                 //if (!StringExtensions.HasValue(operation.Parameters[0].Description))
@@ -39,15 +39,15 @@ namespace CleanArchitecture.Api.Swagger
             }
             else if (IsActionName("Read", "Get"))
             {
-                if (!StringExtensions.HasValue(operation.Summary))
+                if (!operation.Summary.HasValue())
                     operation.Summary = $"Retrieves a {singularizeName} by unique id";
 
-                if (!StringExtensions.HasValue(operation.Parameters[0].Description))
+                if (!operation.Parameters[0].Description.HasValue())
                     operation.Parameters[0].Description = $"a unique id for the {singularizeName}";
             }
             else if (IsActionName("Put", "Edit", "Update"))
             {
-                if (!StringExtensions.HasValue(operation.Summary))
+                if (!operation.Summary.HasValue())
                     operation.Summary = $"Updates a {singularizeName} by unique id";
 
                 //if (!operation.Parameters[0].Description.HasValue())
@@ -58,10 +58,10 @@ namespace CleanArchitecture.Api.Swagger
             }
             else if (IsActionName("Delete", "Remove"))
             {
-                if (!StringExtensions.HasValue(operation.Summary))
+                if (!operation.Summary.HasValue())
                     operation.Summary = $"Deletes a {singularizeName} by unique id";
 
-                if (!StringExtensions.HasValue(operation.Parameters[0].Description))
+                if (!operation.Parameters[0].Description.HasValue())
                     operation.Parameters[0].Description = $"A unique id for the {singularizeName}";
             }
 

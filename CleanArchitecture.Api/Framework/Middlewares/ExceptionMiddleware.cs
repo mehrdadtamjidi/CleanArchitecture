@@ -8,7 +8,7 @@ using Newtonsoft.Json.Serialization;
 using CleanArchitecture.Application.Common.Exceptions;
 
 
-namespace CleanArchitecture.Api.Middlewares
+namespace CleanArchitecture.Api.Framework.Middlewares
 {
     public static class GlobalExceptionMiddlewareExtensions
     {
@@ -67,7 +67,7 @@ namespace CleanArchitecture.Api.Middlewares
             {
                 IsSuccess = false,
                 StatusCode = apiStatusCode,
-                Message = exception.Message + exception.StackTrace + "1111",
+                Message = exception.Message + exception.StackTrace,
                 DateTime = DateTime.Now
             };
 

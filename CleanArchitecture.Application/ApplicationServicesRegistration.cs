@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace CleanArchitecture.Application
 {
-    public static class ApplicationServicesRegisteration
+    public static class ApplicationServicesRegistration 
     {
         public static void ConfigureApplicationServices(this IServiceCollection services)
         {

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 
 
-namespace CleanArchitecture.Api.Filters
+namespace CleanArchitecture.Api.Framework.Filters
 {
     public class ApiResultFilterAttribute : ActionFilterAttribute
     {
