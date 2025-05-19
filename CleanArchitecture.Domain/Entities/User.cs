@@ -17,6 +17,7 @@ namespace CleanArchitecture.Domain.Entities
         public string Email { get; set; } = string.Empty;
         public string UserName { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
+        public string SecurityStamp { get; set; } = string.Empty;
         public Gender Gender { get; set; }
         public ICollection<Role> Roles { get; set; } = new List<Role>();
     }

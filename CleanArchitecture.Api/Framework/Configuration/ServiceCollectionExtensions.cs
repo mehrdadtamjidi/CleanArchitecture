@@ -72,13 +72,12 @@ namespace CleanArchitecture.Api.Framework.Configuration
                         if (!securityStamp.HasValue())
                             context.Fail("This token has no secuirty stamp");
 
-
                         //Find user and token from database and perform your custom validation
-                      //  var userId = claimsIdentity.GetUserId<int>();
-                        var user = await userRepository.GetByIdAsync(context.HttpContext.RequestAborted, 11);
+                        var userId = claimsIdentity.GetUserId<int>();
+                        var user = await userRepository.GetByIdAsync(context.HttpContext.RequestAborted, userId);
 
-                        //if (user.SecurityStamp != securityStamp)
-                        //    context.Fail("Token secuirty stamp is not valid.");
+                        if (user.SecurityStamp != securityStamp)
+                           context.Fail("Token secuirty stamp is not valid.");
                     },
                     OnChallenge = context =>
                     {
