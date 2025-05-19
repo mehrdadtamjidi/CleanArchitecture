@@ -119,10 +119,10 @@ namespace CleanArchitecture.Api.Framework.Configuration
 
                         if (context.AuthenticateFailure != null)
                         {
-                            throw new AppException(ApiResultStatusCode.UnAuthorized, "خطای احراز هویت", HttpStatusCode.OK, context.AuthenticateFailure, null);
+                            throw new AppException(ApiResultStatusCode.UnAuthorized, "Authentication error", HttpStatusCode.OK, context.AuthenticateFailure, null);
                         }
 
-                        throw new AppException(ApiResultStatusCode.UnAuthorized, "خطای احراز هویت", HttpStatusCode.Unauthorized);
+                        throw new AppException(ApiResultStatusCode.UnAuthorized, "Authentication error", HttpStatusCode.Unauthorized);
                     }
                 };
             });
