@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace CleanArchitecture.Application.Features.Users.Commands.CreateUser
 {
     public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, ApiResult<CreateUserDto>>
@@ -34,6 +35,8 @@ namespace CleanArchitecture.Application.Features.Users.Commands.CreateUser
             //        throw new ValidationException(validationResult.Errors);
             //    }
             //}
+
+           var aa =  userRepository.TableNoTracking.ToList();
 
             throw new NotImplementedException();
         }

@@ -13,20 +13,20 @@ namespace CleanArchitecture.Application.Contracts.Persistence
         IQueryable<TEntity> TableNoTracking { get; }
 
         ValueTask<TEntity> GetByIdAsync(CancellationToken cancellationToken, params object[] ids);
-        Task AddAsync(TEntity entity, CancellationToken cancellationToken = default, bool saveNow = true);
-        Task AddRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default, bool saveNow = true);
-        Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default, bool saveNow = true);
-        Task UpdateRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default, bool saveNow = true);
-        Task DeleteAsync(TEntity entity, CancellationToken cancellationToken = default, bool saveNow = true);
-        Task DeleteRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default, bool saveNow = true);
+        Task<bool> AddAsync(TEntity entity, CancellationToken cancellationToken = default, bool saveNow = true);
+        Task<bool> AddRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default, bool saveNow = true);
+        Task<bool> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default, bool saveNow = true);
+        Task<bool> UpdateRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default, bool saveNow = true);
+        Task<bool> DeleteAsync(TEntity entity, CancellationToken cancellationToken = default, bool saveNow = true);
+        Task<bool> DeleteRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default, bool saveNow = true);
 
         TEntity GetById(params object[] ids);
-        void Add(TEntity entity, bool saveNow = true);
-        void AddRange(IEnumerable<TEntity> entities, bool saveNow = true);
-        void Update(TEntity entity, bool saveNow = true);
-        void UpdateRange(IEnumerable<TEntity> entities, bool saveNow = true);
-        void Delete(TEntity entity, bool saveNow = true);
-        void DeleteRange(IEnumerable<TEntity> entities, bool saveNow = true);
+        bool Add(TEntity entity, bool saveNow = true);
+        bool AddRange(IEnumerable<TEntity> entities, bool saveNow = true);
+        bool Update(TEntity entity, bool saveNow = true);
+        bool UpdateRange(IEnumerable<TEntity> entities, bool saveNow = true);
+        bool Delete(TEntity entity, bool saveNow = true);
+        bool DeleteRange(IEnumerable<TEntity> entities, bool saveNow = true);
 
         void Detach(TEntity entity);
         void Attach(TEntity entity);
