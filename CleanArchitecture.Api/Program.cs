@@ -46,6 +46,8 @@ builder.Services.ConfigureInfrastractureServices(builder.Configuration);
 builder.Services.ConfigurePersistenceServices(builder.Configuration);
 #endregion
 
+builder.Services.AddHttpContextAccessor();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -57,6 +59,9 @@ if (app.Environment.IsDevelopment())
 #region SwaggerAndUI
 //app.UseSwaggerAndUI();
 #endregion
+
+
+app.UseTrace();
 
 app.UseHttpsRedirection();
 

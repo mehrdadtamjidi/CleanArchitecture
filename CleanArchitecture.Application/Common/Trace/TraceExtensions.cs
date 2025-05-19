@@ -8,7 +8,8 @@ public static class TraceExtensions
 {
     public static string? GetTraceToken(this HttpContext context)
     {
-        if (context.Items.TryGetValue(TraceConstants.TraceToken, out var traceToken)) return (string?)traceToken;
-        return null;
+        return context.Items.TryGetValue(TraceConstants.TraceToken, out var token)
+            ? token as string
+            : null;
     }
 }
