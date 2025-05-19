@@ -19,6 +19,7 @@ builder.Services.AddOpenApi();
 
 #region Add Site Settings
 builder.Services.Configure<SiteSettings>(builder.Configuration.GetSection(nameof(SiteSettings)));
+var siteSetting = builder.Configuration.GetSection(nameof(SiteSettings)).Get<SiteSettings>();
 #endregion
 #region Register Swagger
 builder.Services.AddSwagger();
@@ -28,6 +29,10 @@ builder.Services.AddCustomApiVersioning();
 #endregion
 #region Register Cors
 builder.Services.RegisterCors(builder.Configuration, builder.Environment);
+#endregion
+
+#region Jwt Service
+builder.Services.AddJwtAuthentication(siteSetting.JwtConfig);
 #endregion
 
 #region Register Application Layer
