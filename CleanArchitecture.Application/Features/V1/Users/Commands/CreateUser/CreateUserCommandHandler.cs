@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace CleanArchitecture.Application.Features.V1.Users.Commands.CreateUser
 {
-    public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, ApiResult<CreateUserDto>>
+    public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, ApiResult<CreateUserOutputDto>>
     {
         private readonly IUserRepository userRepository;
         private readonly IMapper mapper;
@@ -23,7 +23,7 @@ namespace CleanArchitecture.Application.Features.V1.Users.Commands.CreateUser
             this.userRepository = userRepository;
             this.mapper = mapper;
         }
-        public async Task<ApiResult<CreateUserDto>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+        public async Task<ApiResult<CreateUserOutputDto>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
             //var validator = new CreateUserCommandValidator();
             //var validationResult = await validator.ValidateAsync(request);

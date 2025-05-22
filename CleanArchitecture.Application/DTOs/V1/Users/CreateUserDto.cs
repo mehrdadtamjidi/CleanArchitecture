@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace CleanArchitecture.Application.DTOs.V1.Users
 {
-    public class CreateUserDto
+    public class CreateUserInputDto
+    {
+    }
+
+    public class CreateUserOutputDto
     {
     }
 }

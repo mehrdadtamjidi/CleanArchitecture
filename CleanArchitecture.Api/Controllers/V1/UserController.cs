@@ -1,4 +1,8 @@
 ﻿using Asp.Versioning;
+using CleanArchitecture.Application.DTOs.V1.Users;
+using CleanArchitecture.Application.Features.V1.Users.Commands.CreateUser;
+using CleanArchitecture.Application.Responses;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,5 +11,45 @@ namespace CleanArchitecture.Api.Controllers.V1
     [ApiVersion("1")]
     public class UserController : BaseController
     {
+        private readonly IMediator mediator;
+
+        public UserController(IMediator mediator)
+        {
+            this.mediator = mediator;
+        }
+
+        [HttpPost("Register")]
+        public async Task<ApiResult<CreateUserOutputDto>> Register(CreateUserInputDto request)
+        {
+            var command = new CreateUserCommand { };
+            var response = await mediator.Send(command);
+            return Ok(response);
+        }
+
+        [HttpPost("Login")]
+        public async Task<ApiResult<CreateUserOutputDto>> Login(CreateUserInputDto request)
+        {
+            var command = new CreateUserCommand { };
+            var response = await mediator.Send(command);
+            return Ok(response);
+        }
+
+
+        [HttpPost("GetUserById")]
+        public async Task<ApiResult<CreateUserOutputDto>> GetUserById(CreateUserInputDto request)
+        {
+            var command = new CreateUserCommand { };
+            var response = await mediator.Send(command);
+            return Ok(response);
+        }
+
+        [HttpPost("GetUsers")]
+        public async Task<ApiResult<CreateUserOutputDto>> GetUsers(CreateUserInputDto request)
+        {
+            var command = new CreateUserCommand { };
+            var response = await mediator.Send(command);
+            return Ok(response);
+        }
+
     }
 }
