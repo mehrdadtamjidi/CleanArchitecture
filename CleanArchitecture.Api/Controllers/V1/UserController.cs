@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using AutoMapper;
 using CleanArchitecture.Application.DTOs.V1.Users;
 using CleanArchitecture.Application.Features.V1.Users.Commands.CreateUser;
 using CleanArchitecture.Application.Responses;
@@ -12,16 +13,17 @@ namespace CleanArchitecture.Api.Controllers.V1
     public class UserController : BaseController
     {
         private readonly IMediator mediator;
-
-        public UserController(IMediator mediator)
+        private readonly IMapper mapper;
+        public UserController(IMediator mediator, IMapper mapper)
         {
             this.mediator = mediator;
+            this.mapper = mapper;
         }
 
         [HttpPost("Register")]
         public async Task<ApiResult<CreateUserOutputDto>> Register(CreateUserInputDto request)
         {
-            var command = new CreateUserCommand { };
+            var command = mapper.Map<CreateUserCommand>(request);
             var response = await mediator.Send(command);
             return Ok(response);
         }
