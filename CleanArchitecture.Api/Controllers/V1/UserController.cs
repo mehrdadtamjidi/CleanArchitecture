@@ -4,6 +4,7 @@ using CleanArchitecture.Application.DTOs.V1.Users;
 using CleanArchitecture.Application.Features.V1.Users.Commands.CreateUser;
 using CleanArchitecture.Application.Responses;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,12 +21,18 @@ namespace CleanArchitecture.Api.Controllers.V1
             this.mapper = mapper;
         }
 
+        /// <summary>
+        /// Registers a new user in the system.
+        /// </summary>
+        /// <param name="request">User registration data</param>
+        /// <returns>Registered user info</returns>
         [HttpPost("Register")]
+        [Authorize]
         public async Task<ApiResult<CreateUserOutputDto>> Register(CreateUserInputDto request)
         {
             var command = mapper.Map<CreateUserCommand>(request);
             var response = await mediator.Send(command);
-            return Ok(response);
+            return response;
         }
 
         [HttpPost("Login")]

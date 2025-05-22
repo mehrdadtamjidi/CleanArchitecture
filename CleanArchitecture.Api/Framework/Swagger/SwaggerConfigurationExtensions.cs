@@ -46,7 +46,7 @@ namespace CleanArchitecture.Api.Framework.Swagger
             //Add services and configuration to use swagger
             services.AddSwaggerGen(options =>
             {
-                var xmlDocPath = Path.Combine(AppContext.BaseDirectory, "EtmaFinancialCreditApi.xml");
+                var xmlDocPath = Path.Combine(AppContext.BaseDirectory, "CleanArchitectureApi.xml");
                 //show controller XML comments like summary
                 options.IncludeXmlComments(xmlDocPath, true);
 
@@ -98,12 +98,12 @@ namespace CleanArchitecture.Api.Framework.Swagger
                 #region Old way
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
-                    Type = SecuritySchemeType.ApiKey,
-                    Description = "JWT Authorization header using the Bearer scheme.",
-                    Name = "X-Token-JWT",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
                     Scheme = "bearer",
                     BearerFormat = "JWT",
-                    In = ParameterLocation.Header
+                    In = ParameterLocation.Header,
+                    Description = "Enter 'Bearer' followed by your token. Example: Bearer 12345abcdef"
                 });
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement
                     {

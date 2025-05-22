@@ -25,19 +25,7 @@ namespace CleanArchitecture.Application.Features.V1.Users.Commands.CreateUser
         }
         public async Task<ApiResult<CreateUserOutputDto>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
-            //var validator = new CreateUserCommandValidator();
-            //var validationResult = await validator.ValidateAsync(request);
-
-            //if (validationResult.IsValid == false) 
-            //{
-            //    if (!validationResult.IsValid)
-            //    {
-            //        throw new ValidationException(validationResult.Errors);
-            //    }
-            //}
-
-           var aa =  userRepository.TableNoTracking.ToList();
-
+         //  var aa =  userRepository.TableNoTracking.ToList();
             throw new NotImplementedException();
         }
     }
