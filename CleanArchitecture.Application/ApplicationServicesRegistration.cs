@@ -18,7 +18,7 @@ namespace CleanArchitecture.Application
         {
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
-            // FluentValidation: Register all validators in this assembly
+            // AutoMapper
             services.InitializeAutoMapper();
 
             // MediatR: Register request handlers

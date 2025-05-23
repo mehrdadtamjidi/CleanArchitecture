@@ -56,11 +56,23 @@ namespace CleanArchitecture.Api.Framework.Configuration
 
                 options.Events = new JwtBearerEvents
                 {
+                    OnMessageReceived = context =>
+                    {
+                        var token = context.Request.Headers["Authorization"].FirstOrDefault();
+
+                        if (!string.IsNullOrWhiteSpace(token))
+                        {
+                            Console.WriteLine("JWT Token received: " + token);
+                        }
+
+                        return Task.CompletedTask;
+                    },
+
                     OnAuthenticationFailed = context =>
                     {
                         var endpoint = context.HttpContext.GetEndpoint();
                         var isAnonymous = endpoint?.Metadata?.GetMetadata<IAllowAnonymous>() != null;
-
+                        var token = context.Request.Headers["Authorization"].FirstOrDefault();
                         if (isAnonymous)
                         {
                             context.NoResult();

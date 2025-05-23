@@ -42,7 +42,7 @@ namespace CleanArchitecture.Api.Framework.Swagger
                     new OpenApiSecurityScheme
                     {
                         Scheme = schemeName,
-                        Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "OAuth2" }
+                        Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
                     },
                     Array.Empty<string>() //new[] { "readAccess", "writeAccess" }
                 }

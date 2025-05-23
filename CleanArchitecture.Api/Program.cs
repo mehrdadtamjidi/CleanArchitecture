@@ -5,6 +5,7 @@ using CleanArchitecture.Application;
 using CleanArchitecture.Application.Common;
 using CleanArchitecture.Infrastructure;
 using CleanArchitecture.Persistence;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -58,11 +59,13 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+   // app.MapOpenApi();
 }
 
+
+
 #region SwaggerAndUI
-//app.UseSwaggerAndUI();
+app.UseSwaggerAndUI();
 #endregion
 
 

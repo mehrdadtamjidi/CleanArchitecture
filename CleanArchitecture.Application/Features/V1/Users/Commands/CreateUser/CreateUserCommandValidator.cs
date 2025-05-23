@@ -12,12 +12,12 @@ namespace CleanArchitecture.Application.Features.V1.Users.Commands.CreateUser
         public CreateUserCommandValidator()
         {
             RuleFor(u => u.FirstName)
-                   .NotEmpty().WithMessage("this field is required")
-                   .MaximumLength(50).WithMessage("{PropertyName} must be less than 50");
+            .NotEmpty().WithMessage("{PropertyName} is required")
+            .MaximumLength(50).WithMessage("{PropertyName} must be less than 50 characters");
 
             RuleFor(u => u.LastName)
-                   .NotEmpty().WithMessage("this field is required")
-                   .MaximumLength(50).WithMessage("{PropertyName} must be less than 50");
+                .NotEmpty().WithMessage("{PropertyName} is required")
+                .MaximumLength(50).WithMessage("{PropertyName} must be less than 50 characters");
         }
     }
 }
