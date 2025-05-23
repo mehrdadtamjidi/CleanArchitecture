@@ -36,7 +36,7 @@ namespace CleanArchitecture.Api.Framework.Filters
                 message = string.Join(" | ", errorMessage);
 
                 var apiResult = new ApiResult(false, ApiResultStatusCode.BadRequest, message);
-                context.Result = new JsonResult(apiResult) { StatusCode = 200 };
+                context.Result = new JsonResult(apiResult) { StatusCode = StatusCodes.Status400BadRequest };
             }
             else if (context.Result is ContentResult contentResult)
             {
@@ -58,6 +58,44 @@ namespace CleanArchitecture.Api.Framework.Filters
             {
                 var apiResult = new ApiResult<object>(true, ApiResultStatusCode.Success, objectResult.Value);
                 context.Result = new JsonResult(apiResult) { StatusCode = objectResult.StatusCode };
+            }
+            else if (context.Result is ObjectResult result)
+            {
+                if (result.Value is ApiResult apiResultValue)
+                {
+                    if (result.StatusCode == null)
+                    {
+                        if (apiResultValue.IsSuccess)
+                        {
+                            result.StatusCode = StatusCodes.Status200OK;
+                        }
+                        else
+                        {
+                            result.StatusCode = apiResultValue.StatusCode switch
+                            {
+                                ApiResultStatusCode.NotFound => StatusCodes.Status404NotFound,
+                                ApiResultStatusCode.BadRequest => StatusCodes.Status400BadRequest,
+                                ApiResultStatusCode.UnAuthorized => StatusCodes.Status401Unauthorized,
+                                ApiResultStatusCode.ServerError => StatusCodes.Status500InternalServerError,
+                                ApiResultStatusCode.LogicError => StatusCodes.Status500InternalServerError,
+                                _ => StatusCodes.Status400BadRequest
+                            };
+                        }
+                    }
+
+                    context.Result = new JsonResult(apiResultValue)
+                    {
+                        StatusCode = result.StatusCode
+                    };
+                }
+                else if (result.StatusCode == null)
+                {
+                    var apiResult = new ApiResult<object>(true, ApiResultStatusCode.Success, result.Value);
+                    context.Result = new JsonResult(apiResult)
+                    {
+                        StatusCode = StatusCodes.Status200OK
+                    };
+                }
             }
 
             base.OnResultExecuting(context);
