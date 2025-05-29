@@ -32,7 +32,7 @@ namespace CleanArchitecture.Api.Controllers.V1
         {
             var command = mapper.Map<CreateUserCommand>(request);
             var response = await mediator.Send(command);
-            return response;
+            return response; 
         }
 
         [HttpPost("Login")]
