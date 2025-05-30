@@ -27,7 +27,6 @@ namespace CleanArchitecture.Api.Controllers.V1
         /// <param name="request">User registration data</param>
         /// <returns>Registered user info</returns>
         [HttpPost("Register")]
-        [Authorize]
         public async Task<ApiResult<CreateUserOutputDto>> Register(CreateUserInputDto request)
         {
             var command = mapper.Map<CreateUserCommand>(request);
@@ -45,6 +44,7 @@ namespace CleanArchitecture.Api.Controllers.V1
 
 
         [HttpPost("GetUserById")]
+        [Authorize]
         public async Task<ApiResult<CreateUserOutputDto>> GetUserById(CreateUserInputDto request)
         {
             var command = new CreateUserCommand { };
@@ -53,6 +53,7 @@ namespace CleanArchitecture.Api.Controllers.V1
         }
 
         [HttpPost("GetUsers")]
+        [Authorize]
         public async Task<ApiResult<CreateUserOutputDto>> GetUsers(CreateUserInputDto request)
         {
             var command = new CreateUserCommand { };
