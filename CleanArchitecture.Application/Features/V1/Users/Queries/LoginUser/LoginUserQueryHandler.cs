@@ -25,7 +25,6 @@ namespace CleanArchitecture.Application.Features.V1.Users.Queries.LoginUser
         }
         public async Task<ApiResult<LoginUserOutputDto>> Handle(LoginUserQuery request, CancellationToken cancellationToken)
         {
-
             var user = await userRepository.GetByUserNameAndPasswordAsync(request.UserName, request.PasswordHash);
 
             if (user == null)
@@ -33,7 +32,7 @@ namespace CleanArchitecture.Application.Features.V1.Users.Queries.LoginUser
                 return new ApiResult<LoginUserOutputDto>(false,ApiResultStatusCode.BadRequest,null,"Invalid username or password");
             }
 
-            
+
             return new ApiResult<LoginUserOutputDto>(true,ApiResultStatusCode.Success,null);
 
         }
