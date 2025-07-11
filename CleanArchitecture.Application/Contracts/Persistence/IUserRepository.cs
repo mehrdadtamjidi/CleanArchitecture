@@ -9,5 +9,10 @@ namespace CleanArchitecture.Application.Contracts.Persistence
 {
     public interface IUserRepository : IGenericRepository<User>
     {
+        Task<User?> CreateUserAsync(User user);
+        Task<User?> GetByEmailAsync(string email);
+        Task<bool> ChangePasswordAsync(int userId, string newPasswordHash);
+        Task<bool> IsEmailOrUsernameTakenAsync(string email, string userName);
+
     }
 }

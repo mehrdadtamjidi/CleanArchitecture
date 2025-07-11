@@ -3,6 +3,7 @@ using CleanArchitecture.Application.CustomMapping;
 using CleanArchitecture.Application.DTOs.V1.Users;
 using CleanArchitecture.Application.Responses;
 using CleanArchitecture.Domain.Entities;
+using CleanArchitecture.Domain.Enums;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,9 @@ namespace CleanArchitecture.Application.Features.V1.Users.Commands.CreateUser
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
+        public string UserName { get; set; }
+        public string PasswordHash { get; set; }
+        public Gender Gender { get; set; }
 
         public void CreateMappings(Profile profile)
         {

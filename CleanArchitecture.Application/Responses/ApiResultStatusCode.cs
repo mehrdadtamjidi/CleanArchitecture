@@ -5,25 +5,25 @@ namespace CleanArchitecture.Application.Responses
 {
     public enum ApiResultStatusCode
     {
-        [Display(Name = "عملیات با موفقیت انجام شد")]
+        [Display(Name = "Operation completed successfully")]
         Success = 0,
 
-        [Display(Name = "خطایی در سرور رخ داده است")]
+        [Display(Name = "An error occurred on the server")]
         ServerError = 1,
 
-        [Display(Name = "پارامتر های ارسالی معتبر نیستند")]
+        [Display(Name = "Submitted parameters are invalid")]
         BadRequest = 2,
 
-        [Display(Name = "یافت نشد")]
+        [Display(Name = "Resource not found")]
         NotFound = 3,
 
-        [Display(Name = "لیست خالی است")]
+        [Display(Name = "The list is empty")]
         ListEmpty = 4,
 
-        [Display(Name = "خطایی در پردازش رخ داد")]
+        [Display(Name = "A logical error occurred during processing")]
         LogicError = 5,
 
-        [Display(Name = "خطای احراز هویت")]
+        [Display(Name = "Authentication error")]
         UnAuthorized = 6,
     }
 }

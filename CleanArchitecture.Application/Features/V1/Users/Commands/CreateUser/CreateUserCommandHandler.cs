@@ -25,8 +25,24 @@ namespace CleanArchitecture.Application.Features.V1.Users.Commands.CreateUser
         }
         public async Task<ApiResult<CreateUserOutputDto>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
-         //  var aa =  userRepository.TableNoTracking.ToList();
-            throw new NotImplementedException();
+            bool isDuplicate = await userRepository.IsEmailOrUsernameTakenAsync(request.Email, request.UserName);
+
+            if (isDuplicate)
+            {
+                return new ApiResult<CreateUserOutputDto>(false, ApiResultStatusCode.BadRequest, null, "Email or username already exists.");
+            }
+
+            var user = mapper.Map<User>(request);
+
+            var createdUser = await userRepository.CreateUserAsync(user);
+
+            if (createdUser?.Id > 0)
+            {
+                return new ApiResult<CreateUserOutputDto>(true, ApiResultStatusCode.Success, null);
+            }
+
+            return new ApiResult<CreateUserOutputDto>(false, ApiResultStatusCode.LogicError, null);
+
         }
     }
 }
