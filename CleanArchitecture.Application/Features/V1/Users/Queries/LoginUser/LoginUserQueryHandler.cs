@@ -30,7 +30,7 @@ namespace CleanArchitecture.Application.Features.V1.Users.Queries.LoginUser
 
             if (user == null)
             {
-                return new ApiResult<LoginUserOutputDto>(false,ApiResultStatusCode.UnAuthorized,null,"Invalid username or password");
+                return new ApiResult<LoginUserOutputDto>(false,ApiResultStatusCode.BadRequest,null,"Invalid username or password");
             }
 
             

@@ -2,6 +2,7 @@
 using AutoMapper;
 using CleanArchitecture.Application.DTOs.V1.Users;
 using CleanArchitecture.Application.Features.V1.Users.Commands.CreateUser;
+using CleanArchitecture.Application.Features.V1.Users.Queries.LoginUser;
 using CleanArchitecture.Application.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -35,11 +36,11 @@ namespace CleanArchitecture.Api.Controllers.V1
         }
 
         [HttpPost("Login")]
-        public async Task<ApiResult<CreateUserOutputDto>> Login(CreateUserInputDto request)
+        public async Task<ApiResult<LoginUserOutputDto>> Login(LoginUserInputDto request)
         {
-            var command = new CreateUserCommand { };
-            var response = await mediator.Send(command);
-            return Ok(response);
+            var query = mapper.Map<LoginUserQuery>(request);
+            var response = await mediator.Send(query);
+            return response;
         }
 
 
