@@ -51,5 +51,18 @@ namespace CleanArchitecture.Persistence.Repositories
                 u.Email.ToLower() == email.ToLower() ||
                 u.UserName.ToLower() == userName.ToLower());
         }
+
+        public async Task<User?> GetByUserNameAndPasswordAsync(string userName, string passwordHash)
+        {
+            var user = await Table
+                .FirstOrDefaultAsync(u => u.UserName.ToLower() == userName.ToLower());
+
+            if (user is null)
+                return null;
+
+            bool isValidPassword = PasswordHasher.VerifyPassword(user.PasswordHash, passwordHash);
+
+            return isValidPassword ? user : null;
+        }
     }
 }

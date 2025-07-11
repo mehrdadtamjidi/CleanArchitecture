@@ -13,6 +13,7 @@ namespace CleanArchitecture.Application.Contracts.Persistence
         Task<User?> GetByEmailAsync(string email);
         Task<bool> ChangePasswordAsync(int userId, string newPasswordHash);
         Task<bool> IsEmailOrUsernameTakenAsync(string email, string userName);
+        Task<User?> GetByUserNameAndPasswordAsync(string userName, string passwordHash);
 
     }
 }
