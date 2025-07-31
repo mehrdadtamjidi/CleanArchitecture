@@ -33,8 +33,27 @@ namespace CleanArchitecture.Application.Features.V1.Users.Queries.LoginUser
             }
 
 
-            return new ApiResult<LoginUserOutputDto>(true,ApiResultStatusCode.Success,null);
+            #region Generate Token
 
+            string SecurityStamp = Guid.NewGuid().ToString();
+
+            var token = await jwtService.GenerateToken(new JwtClaimDto
+            {
+                UserId = user.Id,
+                UserName = user.UserName,
+                SecurityStamp = SecurityStamp,
+            });
+
+            #endregion
+
+            var LoginUserOutputDto = new LoginUserOutputDto
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Token = token
+            };
+
+            return new ApiResult<LoginUserOutputDto>(true,ApiResultStatusCode.Success, LoginUserOutputDto);
         }
     }
 }

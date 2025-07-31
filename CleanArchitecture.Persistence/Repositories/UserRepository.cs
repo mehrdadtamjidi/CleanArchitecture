@@ -64,5 +64,19 @@ namespace CleanArchitecture.Persistence.Repositories
 
             return isValidPassword ? user : null;
         }
+
+        public async Task<(List<User> Users, long TotalCount)> GetPaginatedAsync(int page, int perPage, CancellationToken cancellationToken)
+        {
+            var query = TableNoTracking;
+
+            var totalCount = await query.CountAsync(cancellationToken);
+
+            var users = await query
+                .Skip(page * perPage)
+                .Take(perPage)
+                .ToListAsync(cancellationToken);
+
+            return (users, totalCount);
+        }
     }
 }

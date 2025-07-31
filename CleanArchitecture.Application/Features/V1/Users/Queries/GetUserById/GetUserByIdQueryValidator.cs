@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace CleanArchitecture.Application.Features.V1.Users.Queries.GetUser
 {
-    public class GetUserQueryValidator : AbstractValidator<GetUserQuery>
+    public class GetUserByIdQueryValidator : AbstractValidator<GetUserByIdQuery>
     {
-        public GetUserQueryValidator()
+        public GetUserByIdQueryValidator()
         {
             RuleFor(u => u.Id)
                 .NotEmpty()

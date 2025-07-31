@@ -65,18 +65,18 @@ namespace CleanArchitecture.Infrastructure.Auth
             {
                 var securityStampClaimType = new ClaimsIdentityOptions().SecurityStampClaimType;
 
-                return new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, input.UserName),
-                new Claim(ClaimTypes.NameIdentifier, input.UserId.ToString()),
-                new Claim("NationalCode", input.NationalCode),
-                new Claim("PersonId", input.PersonId.ToString()),
-                new Claim(ClaimTypes.MobilePhone, input.Mobile),
-                new Claim(securityStampClaimType,  input.SecurityStamp.ToString()),
-                new Claim("BusinessId",  input.BusinessId.ToString()),
-                new Claim("BusinessEnable",  input.BusinessId > 0 ? "1" : "0"),
-                new Claim(ClaimTypes.Role,  input.Role.ToString())
-            };
+                var list = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, input.UserName),
+                    new Claim(ClaimTypes.NameIdentifier, input.UserId.ToString()),
+                    new Claim(securityStampClaimType,  input.SecurityStamp.ToString()),
+                   // new Claim(ClaimTypes.Role,  input.Role.ToString())
+                };
+
+                foreach (var role in input.Role)
+                    list.Add(new Claim(ClaimTypes.Role, role));
+
+                return list;
             }
         }
     }
