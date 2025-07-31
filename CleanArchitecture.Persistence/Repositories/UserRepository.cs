@@ -81,14 +81,14 @@ namespace CleanArchitecture.Persistence.Repositories
             return (users, totalCount);
         }
 
-        public async Task<bool> UpdateSecurityStampAsync(int userId)
+        public async Task<bool> UpdateSecurityStampAsync(int userId,string securityStamp)
         {
             var user = await GetByIdAsync(default, userId);
 
             if (user is null)
                 return false;
 
-            user.SecurityStamp = Guid.NewGuid().ToString();
+            user.SecurityStamp = securityStamp;
             user.DateModified = DateTime.UtcNow;
 
             await UpdateAsync(user, default);

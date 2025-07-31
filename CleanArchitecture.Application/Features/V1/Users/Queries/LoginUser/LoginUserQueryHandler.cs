@@ -35,7 +35,7 @@ namespace CleanArchitecture.Application.Features.V1.Users.Queries.LoginUser
 
             #region Generate Token
 
-            string SecurityStamp = Guid.NewGuid().ToString();
+            string securityStamp = Guid.NewGuid().ToString();
 
             var roles = user.UserRoles.Select(ur => ur.Role.Name).ToList();
 
@@ -43,7 +43,7 @@ namespace CleanArchitecture.Application.Features.V1.Users.Queries.LoginUser
             {
                 UserId = user.Id,
                 UserName = user.UserName,
-                SecurityStamp = SecurityStamp,
+                SecurityStamp = securityStamp,
                 Role = roles,
                 Remember = false
             });
@@ -57,7 +57,7 @@ namespace CleanArchitecture.Application.Features.V1.Users.Queries.LoginUser
                 Token = token
             };
 
-            await userRepository.UpdateSecurityStampAsync(user.Id);
+            await userRepository.UpdateSecurityStampAsync(user.Id, securityStamp);
 
             return new ApiResult<LoginUserOutputDto>(true,ApiResultStatusCode.Success, LoginUserOutputDto);
         }

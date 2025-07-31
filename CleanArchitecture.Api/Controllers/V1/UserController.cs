@@ -59,12 +59,12 @@ namespace CleanArchitecture.Api.Controllers.V1
         /// <param name="request">Object containing the user ID</param>
         /// <returns>User details</returns>
         [HttpPost("GetUserById")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<ApiResult<GetUserByIdOutputDto>> GetUserById(GetUserByIdDto request)
         {
             var query = new GetUserByIdQuery { Id = request.Id };
             var response = await mediator.Send(query);
-            return Ok(response);
+            return response;
         }
 
         /// <summary>
@@ -73,12 +73,12 @@ namespace CleanArchitecture.Api.Controllers.V1
         /// <param name="request">Pagination parameters (Page, PerPage)</param>
         /// <returns>Paginated list of user records</returns>
         [HttpPost("GetUsers")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<ApiResult<PaginationResult<GetUsersOutputDto>>> GetUsers(GetUsersQuery request)
         {
             var query = new GetUsersQuery { Page = request.Page , PerPage = request.PerPage };
             var response = await mediator.Send(request);
-            return Ok(response);
+            return response;
         }
 
     }
