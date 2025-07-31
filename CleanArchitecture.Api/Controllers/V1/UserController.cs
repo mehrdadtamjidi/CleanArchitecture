@@ -64,7 +64,7 @@ namespace CleanArchitecture.Api.Controllers.V1
         {
             var query = new GetUserByIdQuery { Id = request.Id };
             var response = await mediator.Send(query);
-            return response;   
+            return response;
         }
 
         /// <summary>
