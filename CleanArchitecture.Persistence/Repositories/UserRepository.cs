@@ -55,6 +55,8 @@ namespace CleanArchitecture.Persistence.Repositories
         public async Task<User?> GetByUserNameAndPasswordAsync(string userName, string passwordHash)
         {
             var user = await Table
+                .Include(u => u.UserRoles)
+                .ThenInclude(ur => ur.Role)
                 .FirstOrDefaultAsync(u => u.UserName.ToLower() == userName.ToLower());
 
             if (user is null)

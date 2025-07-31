@@ -37,11 +37,15 @@ namespace CleanArchitecture.Application.Features.V1.Users.Queries.LoginUser
 
             string SecurityStamp = Guid.NewGuid().ToString();
 
+            var roles = user.UserRoles.Select(ur => ur.Role.Name).ToList();
+
             var token = await jwtService.GenerateToken(new JwtClaimDto
             {
                 UserId = user.Id,
                 UserName = user.UserName,
                 SecurityStamp = SecurityStamp,
+                Role = roles,
+                Remember = false
             });
 
             #endregion
