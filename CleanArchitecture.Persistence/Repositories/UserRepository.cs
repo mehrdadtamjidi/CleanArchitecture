@@ -62,7 +62,7 @@ namespace CleanArchitecture.Persistence.Repositories
             if (user is null)
                 return null;
 
-            bool isValidPassword = PasswordHasher.VerifyPassword(user.PasswordHash, passwordHash);
+            bool isValidPassword = PasswordHasher.VerifyPassword(passwordHash,user.PasswordHash);
 
             return isValidPassword ? user : null;
         }
