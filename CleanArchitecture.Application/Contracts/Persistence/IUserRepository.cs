@@ -15,5 +15,6 @@ namespace CleanArchitecture.Application.Contracts.Persistence
         Task<bool> IsEmailOrUsernameTakenAsync(string email, string userName);
         Task<User?> GetByUserNameAndPasswordAsync(string userName, string passwordHash);
         Task<(List<User> Users, long TotalCount)> GetPaginatedAsync(int page, int perPage, CancellationToken cancellationToken);
+        Task<bool> UpdateSecurityStampAsync(int userId);
     }
 }

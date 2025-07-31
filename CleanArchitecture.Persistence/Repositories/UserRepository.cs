@@ -41,7 +41,7 @@ namespace CleanArchitecture.Persistence.Repositories
             user.SecurityStamp = Guid.NewGuid().ToString();
             user.DateModified = DateTime.UtcNow;
 
-            await UpdateAsync(user);
+            await UpdateAsync(user,default);
             return true;
         }
 
@@ -79,6 +79,20 @@ namespace CleanArchitecture.Persistence.Repositories
                 .ToListAsync(cancellationToken);
 
             return (users, totalCount);
+        }
+
+        public async Task<bool> UpdateSecurityStampAsync(int userId)
+        {
+            var user = await GetByIdAsync(default, userId);
+
+            if (user is null)
+                return false;
+
+            user.SecurityStamp = Guid.NewGuid().ToString();
+            user.DateModified = DateTime.UtcNow;
+
+            await UpdateAsync(user, default);
+            return true;
         }
     }
 }
