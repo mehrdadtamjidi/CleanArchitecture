@@ -57,6 +57,8 @@ namespace CleanArchitecture.Application.Features.V1.Users.Queries.LoginUser
                 Token = token
             };
 
+            await userRepository.UpdateSecurityStampAsync(user.Id);
+
             return new ApiResult<LoginUserOutputDto>(true,ApiResultStatusCode.Success, LoginUserOutputDto);
         }
     }
