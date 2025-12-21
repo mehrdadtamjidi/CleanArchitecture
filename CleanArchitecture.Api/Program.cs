@@ -1,4 +1,5 @@
 using CleanArchitecture.Api.Framework.Configuration;
+using CleanArchitecture.Api.Framework.Filters;
 using CleanArchitecture.Api.Framework.Middlewares;
 using CleanArchitecture.Api.Framework.Swagger;
 using CleanArchitecture.Application;
@@ -50,6 +51,10 @@ builder.Services.ConfigureInfrastractureServices(builder.Configuration);
 
 #region Register Persistence Layer
 builder.Services.ConfigurePersistenceServices(builder.Configuration);
+#endregion
+
+#region Add Trace Header Result
+builder.Services.AddScoped<AddTraceHeaderResultFilter>();
 #endregion
 
 builder.Services.AddHttpContextAccessor();
