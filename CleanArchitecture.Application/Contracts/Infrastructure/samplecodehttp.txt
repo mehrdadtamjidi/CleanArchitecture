@@ -1,0 +1,28 @@
+﻿var headers = new Dictionary<string, string>
+{
+    { "Authorization", "Bearer YOUR_TOKEN" },
+    { "X-Trace-Token-Id", Guid.NewGuid().ToString() }
+};
+
+var request = new MyRequestDto
+{
+    Name = "Test"
+};
+
+var result = await _httpService.PostAsync<MyRequestDto, MyResponseDto>(
+    "https://api.example.com/test",
+    request,
+    headers);
+
+if (!result.IsSuccess)
+{
+    var error = result.ErrorMessage;
+    var statusCode = result.StatusCode;
+    var raw = result.RawResponse;
+
+    // log error
+}
+else
+{
+    var data = result.Data;
+}

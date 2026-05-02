@@ -4,7 +4,9 @@ using CleanArchitecture.Api.Framework.Middlewares;
 using CleanArchitecture.Api.Framework.Swagger;
 using CleanArchitecture.Application;
 using CleanArchitecture.Application.Common;
+using CleanArchitecture.Application.Contracts.Infrastructure;
 using CleanArchitecture.Infrastructure;
+using CleanArchitecture.Infrastructure.HttpRequest;
 using CleanArchitecture.Persistence;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
@@ -58,6 +60,11 @@ builder.Services.AddScoped<AddTraceHeaderResultFilter>();
 #endregion
 
 builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddHttpClient<IHttpService, HttpService>(client =>
+{
+    client.Timeout = TimeSpan.FromSeconds(30);
+});
 
 var app = builder.Build();
 

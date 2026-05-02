@@ -1,6 +1,7 @@
 ﻿using CleanArchitecture.Application.Contracts.Infrastructure;
 using CleanArchitecture.Infrastructure.Auth;
 using CleanArchitecture.Infrastructure.Auth.CleanArchitecture.Infrastructure.Auth;
+using CleanArchitecture.Infrastructure.HttpRequest;
 using CleanArchitecture.Infrastructure.Mail;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +19,7 @@ namespace CleanArchitecture.Infrastructure
         {
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped<IJwtService, JwtService>();
+
             return services;
         }
     }
