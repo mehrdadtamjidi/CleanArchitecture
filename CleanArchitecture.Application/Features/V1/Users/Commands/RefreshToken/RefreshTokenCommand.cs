@@ -3,13 +3,8 @@ using MediatR;
 
 namespace CleanArchitecture.Application.Features.V1.Users.Commands.RefreshToken
 {
-    public class RefreshTokenCommand : IRequest<LoginUserOutputDto>
+    public class RefreshTokenCommand : IRequest<LoginUserResponse>
     {
         public string RefreshToken { get; set; } = string.Empty;
-
-        public static RefreshTokenCommand FromDto(RefreshTokenInputDto dto) => new()
-        {
-            RefreshToken = dto.RefreshToken
-        };
     }
 }

@@ -3,15 +3,9 @@ using MediatR;
 
 namespace CleanArchitecture.Application.Features.V1.Users.Queries.LoginUser
 {
-    public class LoginUserQuery : IRequest<LoginUserOutputDto>
+    public class LoginUserQuery : IRequest<LoginUserResponse>
     {
         public string UserName { get; set; }
         public string Password { get; set; }
-
-        public static LoginUserQuery FromDto(LoginUserInputDto dto) => new()
-        {
-            UserName = dto.UserName,
-            Password = dto.Password
-        };
     }
 }

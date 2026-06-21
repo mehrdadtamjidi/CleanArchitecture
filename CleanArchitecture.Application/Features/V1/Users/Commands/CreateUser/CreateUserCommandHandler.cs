@@ -3,12 +3,11 @@ using CleanArchitecture.Application.Contracts.Infrastructure;
 using CleanArchitecture.Application.Contracts.Persistence;
 using CleanArchitecture.Application.DTOs.V1.Users;
 using CleanArchitecture.Domain.Entities;
-using CleanArchitecture.Domain.Enums;
 using MediatR;
 
 namespace CleanArchitecture.Application.Features.V1.Users.Commands.CreateUser
 {
-    public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, CreateUserOutputDto>
+    public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, CreateUserResponse>
     {
         private readonly IUserRepository _userRepository;
         private readonly IPasswordHasher _passwordHasher;
@@ -19,7 +18,7 @@ namespace CleanArchitecture.Application.Features.V1.Users.Commands.CreateUser
             _passwordHasher = passwordHasher;
         }
 
-        public async Task<CreateUserOutputDto> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+        public async Task<CreateUserResponse> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
             bool isDuplicate = await _userRepository.IsEmailOrUsernameTakenAsync(request.Email, request.UserName);
 
@@ -39,7 +38,7 @@ namespace CleanArchitecture.Application.Features.V1.Users.Commands.CreateUser
             var createdUser = await _userRepository.CreateUserAsync(user);
 
             if (createdUser?.Id > 0)
-                return new CreateUserOutputDto { Id = createdUser.Id };
+                return new CreateUserResponse { Id = createdUser.Id };
 
             throw new LogicException("User could not be created.");
         }

@@ -10,7 +10,7 @@ using System.Security.Cryptography;
 
 namespace CleanArchitecture.Application.Features.V1.Users.Commands.RefreshToken
 {
-    public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, LoginUserOutputDto>
+    public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, LoginUserResponse>
     {
         private readonly IRefreshTokenRepository _refreshTokenRepository;
         private readonly IUserRepository _userRepository;
@@ -29,7 +29,7 @@ namespace CleanArchitecture.Application.Features.V1.Users.Commands.RefreshToken
             _siteSettings = siteSettings.Value;
         }
 
-        public async Task<LoginUserOutputDto> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
+        public async Task<LoginUserResponse> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
         {
             var existing = await _refreshTokenRepository.GetByTokenAsync(request.RefreshToken, cancellationToken);
 
@@ -59,7 +59,7 @@ namespace CleanArchitecture.Application.Features.V1.Users.Commands.RefreshToken
             await _refreshTokenRepository.CreateAsync(newRefreshToken, cancellationToken);
             await _userRepository.UpdateSecurityStampAsync(user.Id, securityStamp);
 
-            return new LoginUserOutputDto
+            return new LoginUserResponse
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,

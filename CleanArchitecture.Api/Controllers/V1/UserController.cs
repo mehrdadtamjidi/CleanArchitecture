@@ -27,25 +27,25 @@ namespace CleanArchitecture.Api.Controllers.V1
         /// <summary>Registers a new user in the system.</summary>
         [HttpPost("Register")]
         [AllowAnonymous]
-        public async Task<ActionResult<CreateUserOutputDto>> Register(CreateUserInputDto request)
+        public async Task<ActionResult<CreateUserResponse>> Register(CreateUserCommand request)
         {
-            return Ok(await _mediator.Send(CreateUserCommand.FromDto(request)));
+            return Ok(await _mediator.Send(request));
         }
 
         /// <summary>Authenticates a user and returns a token if successful.</summary>
         [HttpPost("Login")]
         [AllowAnonymous]
-        public async Task<ActionResult<LoginUserOutputDto>> Login(LoginUserInputDto request)
+        public async Task<ActionResult<LoginUserResponse>> Login(LoginUserQuery request)
         {
-            return Ok(await _mediator.Send(LoginUserQuery.FromDto(request)));
+            return Ok(await _mediator.Send(request));
         }
 
         /// <summary>Issues a new access token using a valid refresh token.</summary>
         [HttpPost("RefreshToken")]
         [AllowAnonymous]
-        public async Task<ActionResult<LoginUserOutputDto>> RefreshToken(RefreshTokenInputDto request)
+        public async Task<ActionResult<LoginUserResponse>> RefreshToken(RefreshTokenCommand request)
         {
-            return Ok(await _mediator.Send(RefreshTokenCommand.FromDto(request)));
+            return Ok(await _mediator.Send(request));
         }
 
         /// <summary>Revokes all refresh tokens and invalidates the current session.</summary>
@@ -61,17 +61,17 @@ namespace CleanArchitecture.Api.Controllers.V1
         /// <summary>Retrieves a user by their unique ID.</summary>
         [HttpPost("GetUserById")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<GetUserByIdOutputDto>> GetUserById(GetUserByIdInputDto request)
+        public async Task<ActionResult<GetUserByIdResponse>> GetUserById(GetUserByIdQuery request)
         {
-            return Ok(await _mediator.Send(new GetUserByIdQuery { Id = request.Id }));
+            return Ok(await _mediator.Send(request));
         }
 
         /// <summary>Retrieves a paginated list of users.</summary>
         [HttpPost("GetUsers")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<PaginationResult<GetUsersOutputDto>>> GetUsers(GetUsersInputDto request)
+        public async Task<ActionResult<PaginationResult<GetUsersResponse>>> GetUsers(GetUsersQuery request)
         {
-            return Ok(await _mediator.Send(GetUsersQuery.FromDto(request)));
+            return Ok(await _mediator.Send(request));
         }
     }
 }

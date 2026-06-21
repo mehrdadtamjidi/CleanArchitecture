@@ -10,7 +10,7 @@ using System.Security.Cryptography;
 
 namespace CleanArchitecture.Application.Features.V1.Users.Queries.LoginUser
 {
-    public class LoginUserQueryHandler : IRequestHandler<LoginUserQuery, LoginUserOutputDto>
+    public class LoginUserQueryHandler : IRequestHandler<LoginUserQuery, LoginUserResponse>
     {
         private readonly IUserRepository _userRepository;
         private readonly IRefreshTokenRepository _refreshTokenRepository;
@@ -32,7 +32,7 @@ namespace CleanArchitecture.Application.Features.V1.Users.Queries.LoginUser
             _siteSettings = siteSettings.Value;
         }
 
-        public async Task<LoginUserOutputDto> Handle(LoginUserQuery request, CancellationToken cancellationToken)
+        public async Task<LoginUserResponse> Handle(LoginUserQuery request, CancellationToken cancellationToken)
         {
             var user = await _userRepository.GetByUsernameAsync(request.UserName);
 
@@ -60,7 +60,7 @@ namespace CleanArchitecture.Application.Features.V1.Users.Queries.LoginUser
             await _userRepository.UpdateSecurityStampAsync(user.Id, securityStamp);
             await _refreshTokenRepository.CreateAsync(refreshToken, cancellationToken);
 
-            return new LoginUserOutputDto
+            return new LoginUserResponse
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,

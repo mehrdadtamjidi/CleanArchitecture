@@ -3,7 +3,7 @@ using MediatR;
 
 namespace CleanArchitecture.Application.Features.V1.Users.Queries.GetUser
 {
-    public class GetUserByIdQuery : IRequest<GetUserByIdOutputDto>
+    public class GetUserByIdQuery : IRequest<GetUserByIdResponse>
     {
         public int Id { get; set; }
     }
