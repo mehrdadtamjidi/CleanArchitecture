@@ -34,5 +34,17 @@ namespace CleanArchitecture.Persistence.Repositories
             refreshToken.IsRevoked = true;
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
+
+        public async Task RevokeAllByUserIdAsync(int userId, CancellationToken cancellationToken = default)
+        {
+            var tokens = await _dbContext.RefreshTokens
+                .Where(x => x.UserId == userId && !x.IsRevoked)
+                .ToListAsync(cancellationToken);
+
+            foreach (var token in tokens)
+                token.IsRevoked = true;
+
+            await _dbContext.SaveChangesAsync(cancellationToken);
+        }
     }
 }

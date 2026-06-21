@@ -3,11 +3,13 @@ using AutoMapper;
 using CleanArchitecture.Application.DTOs.SharedModels;
 using CleanArchitecture.Application.DTOs.V1.Users;
 using CleanArchitecture.Application.Features.V1.Users.Commands.CreateUser;
+using CleanArchitecture.Application.Features.V1.Users.Commands.Logout;
 using CleanArchitecture.Application.Features.V1.Users.Commands.RefreshToken;
 using CleanArchitecture.Application.Features.V1.Users.Queries.GetUser;
 using CleanArchitecture.Application.Features.V1.Users.Queries.GetUsers;
 using CleanArchitecture.Application.Features.V1.Users.Queries.LoginUser;
 using CleanArchitecture.Application.Responses;
+using CleanArchitecture.Application.Common;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -66,6 +68,17 @@ namespace CleanArchitecture.Api.Controllers.V1
         }
 
         /// <summary>
+        /// Revokes all refresh tokens and invalidates the current session.
+        /// </summary>
+        [HttpPost("Logout")]
+        [Authorize]
+        public async Task<ApiResult> Logout()
+        {
+            var userId = User.Identity.GetUserId<int>();
+            return await _mediator.Send(new LogoutCommand { UserId = userId });
+        }
+
+        /// <summary>
         /// Retrieves a user by their unique ID.
         /// </summary>
         /// <param name="request">Object containing the user ID</param>
@@ -88,9 +101,7 @@ namespace CleanArchitecture.Api.Controllers.V1
         [Authorize(Roles = "Admin")]
         public async Task<ApiResult<PaginationResult<GetUsersOutputDto>>> GetUsers(GetUsersQuery request)
         {
-            var query = new GetUsersQuery { Page = request.Page , PerPage = request.PerPage };
-            var response = await _mediator.Send(request);
-            return response;
+            return await _mediator.Send(request);
         }
 
     }
