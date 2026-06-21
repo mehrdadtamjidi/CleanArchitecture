@@ -21,7 +21,13 @@ namespace CleanArchitecture.Application.Features.V1.Users.Queries.GetUser
             if (user == null)
                 throw new NotFoundException($"User with id {request.Id} not found.");
 
-            return GetUserByIdOutputDto.FromEntity(user);
+            return new GetUserByIdOutputDto
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                UserName = user.UserName
+            };
         }
     }
 }
