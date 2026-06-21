@@ -1,4 +1,4 @@
-﻿using CleanArchitecture.Application.Common;
+﻿using CleanArchitecture.Application.Contracts.Infrastructure;
 using CleanArchitecture.Application.Contracts.Persistence;
 using CleanArchitecture.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -12,14 +12,17 @@ namespace CleanArchitecture.Persistence.Repositories
 {
     public class UserRepository : GenericRepository<User>, IUserRepository
     {
-        public UserRepository(ApplicationDbContext dbContext)
+        private readonly IPasswordHasher _passwordHasher;
+
+        public UserRepository(ApplicationDbContext dbContext, IPasswordHasher passwordHasher)
             : base(dbContext)
         {
+            _passwordHasher = passwordHasher;
         }
 
         public async Task<User?> CreateUserAsync(User user)
         {
-            user.PasswordHash = PasswordHasher.HashPassword(user.PasswordHash);
+            user.PasswordHash = _passwordHasher.HashPassword(user.PasswordHash);
             user.SecurityStamp = Guid.NewGuid().ToString();
 
             return await AddAsync(user);
@@ -62,7 +65,7 @@ namespace CleanArchitecture.Persistence.Repositories
             if (user is null)
                 return null;
 
-            bool isValidPassword = PasswordHasher.VerifyPassword(passwordHash,user.PasswordHash);
+            bool isValidPassword = _passwordHasher.VerifyPassword(passwordHash, user.PasswordHash);
 
             return isValidPassword ? user : null;
         }

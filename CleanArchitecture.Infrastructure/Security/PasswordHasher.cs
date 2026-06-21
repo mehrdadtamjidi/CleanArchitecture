@@ -1,24 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using CleanArchitecture.Application.Contracts.Infrastructure;
 using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CleanArchitecture.Application.Common
+namespace CleanArchitecture.Infrastructure.Security
 {
-    public static class PasswordHasher
+    public class PasswordHasher : IPasswordHasher
     {
-        public static string HashPassword(string password)
+        public string HashPassword(string password)
         {
-            // ایجاد salt تصادفی
-            byte[] salt = RandomNumberGenerator.GetBytes(16); // 128-bit
-
-            // هش کردن با PBKDF2
+            byte[] salt = RandomNumberGenerator.GetBytes(16);
             var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 100_000, HashAlgorithmName.SHA256);
-            byte[] hash = pbkdf2.GetBytes(32); // 256-bit
+            byte[] hash = pbkdf2.GetBytes(32);
 
-            // ترکیب salt و hash
             byte[] hashBytes = new byte[48];
             Buffer.BlockCopy(salt, 0, hashBytes, 0, 16);
             Buffer.BlockCopy(hash, 0, hashBytes, 16, 32);
@@ -26,7 +18,7 @@ namespace CleanArchitecture.Application.Common
             return Convert.ToBase64String(hashBytes);
         }
 
-        public static bool VerifyPassword(string password, string storedHash)
+        public bool VerifyPassword(string password, string storedHash)
         {
             byte[] hashBytes = Convert.FromBase64String(storedHash);
 

@@ -3,6 +3,7 @@ using CleanArchitecture.Infrastructure.Auth;
 using CleanArchitecture.Infrastructure.Auth.CleanArchitecture.Infrastructure.Auth;
 using CleanArchitecture.Infrastructure.HttpRequest;
 using CleanArchitecture.Infrastructure.Mail;
+using CleanArchitecture.Infrastructure.Security;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -19,6 +20,7 @@ namespace CleanArchitecture.Infrastructure
         {
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped<IJwtService, JwtService>();
+            services.AddSingleton<IPasswordHasher, PasswordHasher>();
 
             return services;
         }
