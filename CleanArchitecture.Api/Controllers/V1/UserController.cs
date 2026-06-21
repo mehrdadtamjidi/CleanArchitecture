@@ -43,9 +43,9 @@ namespace CleanArchitecture.Api.Controllers.V1
         /// <summary>Issues a new access token using a valid refresh token.</summary>
         [HttpPost("RefreshToken")]
         [AllowAnonymous]
-        public async Task<ActionResult<LoginUserOutputDto>> RefreshToken([FromBody] RefreshTokenCommand command)
+        public async Task<ActionResult<LoginUserOutputDto>> RefreshToken(RefreshTokenInputDto request)
         {
-            return Ok(await _mediator.Send(command));
+            return Ok(await _mediator.Send(RefreshTokenCommand.FromDto(request)));
         }
 
         /// <summary>Revokes all refresh tokens and invalidates the current session.</summary>
