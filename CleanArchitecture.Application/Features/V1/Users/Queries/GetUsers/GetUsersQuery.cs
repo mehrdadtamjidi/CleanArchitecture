@@ -8,5 +8,11 @@ namespace CleanArchitecture.Application.Features.V1.Users.Queries.GetUsers
     {
         public int Page { get; set; } = 0;
         public int PerPage { get; set; } = 10;
+
+        public static GetUsersQuery FromDto(GetUsersInputDto dto) => new()
+        {
+            Page = dto.Page,
+            PerPage = dto.PerPage
+        };
     }
 }

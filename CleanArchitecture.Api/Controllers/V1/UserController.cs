@@ -69,9 +69,9 @@ namespace CleanArchitecture.Api.Controllers.V1
         /// <summary>Retrieves a paginated list of users.</summary>
         [HttpPost("GetUsers")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<PaginationResult<GetUsersOutputDto>>> GetUsers(GetUsersQuery request)
+        public async Task<ActionResult<PaginationResult<GetUsersOutputDto>>> GetUsers(GetUsersInputDto request)
         {
-            return Ok(await _mediator.Send(request));
+            return Ok(await _mediator.Send(GetUsersQuery.FromDto(request)));
         }
     }
 }
