@@ -1,5 +1,4 @@
-﻿using CleanArchitecture.Application.Features.V1.Users.Queries.LoginUser;
-using FluentValidation;
+﻿using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Linq;

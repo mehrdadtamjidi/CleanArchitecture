@@ -7,7 +7,7 @@ using CleanArchitecture.Application.Features.V1.Users.Commands.Logout;
 using CleanArchitecture.Application.Features.V1.Users.Commands.RefreshToken;
 using CleanArchitecture.Application.Features.V1.Users.Queries.GetUser;
 using CleanArchitecture.Application.Features.V1.Users.Queries.GetUsers;
-using CleanArchitecture.Application.Features.V1.Users.Queries.LoginUser;
+using CleanArchitecture.Application.Features.V1.Users.Commands.LoginUser;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -35,7 +35,7 @@ namespace CleanArchitecture.Api.Controllers.V1
         /// <summary>Authenticates a user and returns a token if successful.</summary>
         [HttpPost("Login")]
         [AllowAnonymous]
-        public async Task<ActionResult<LoginUserResponse>> Login(LoginUserQuery request)
+        public async Task<ActionResult<LoginUserResponse>> Login(LoginUserCommand request)
         {
             return Ok(await _mediator.Send(request));
         }
