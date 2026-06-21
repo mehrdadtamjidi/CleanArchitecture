@@ -9,6 +9,14 @@ namespace CleanArchitecture.Application.Common
     public class SiteSettings
     {
         public JwtConfig JwtConfig { get; set; }
+        public RedisSettings Redis { get; set; }
+    }
+
+    public class RedisSettings
+    {
+        public string[] Nodes { get; set; } = [];
+        public string InstanceName { get; set; } = string.Empty;
+        public int DefaultExpirationMinutes { get; set; } = 60;
     }
 
 
