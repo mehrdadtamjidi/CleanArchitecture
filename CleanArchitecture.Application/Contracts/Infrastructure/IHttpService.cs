@@ -1,8 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CleanArchitecture.Application.DTOs.V1;
 
 namespace CleanArchitecture.Application.Contracts.Infrastructure
@@ -21,6 +16,12 @@ namespace CleanArchitecture.Application.Contracts.Infrastructure
             CancellationToken cancellationToken = default);
 
         Task<HttpServiceResult<TResponse>> PutAsync<TRequest, TResponse>(
+            string url,
+            TRequest request,
+            Dictionary<string, string>? headers = null,
+            CancellationToken cancellationToken = default);
+
+        Task<HttpServiceResult<TResponse>> PatchAsync<TRequest, TResponse>(
             string url,
             TRequest request,
             Dictionary<string, string>? headers = null,
