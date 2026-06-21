@@ -6,11 +6,6 @@ using CleanArchitecture.Infrastructure.Mail;
 using CleanArchitecture.Infrastructure.Security;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CleanArchitecture.Infrastructure
 {
@@ -21,6 +16,10 @@ namespace CleanArchitecture.Infrastructure
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped<IJwtService, JwtService>();
             services.AddSingleton<IPasswordHasher, PasswordHasher>();
+            services.AddHttpClient<IHttpService, HttpService>(client =>
+            {
+                client.Timeout = TimeSpan.FromSeconds(30);
+            });
 
             return services;
         }

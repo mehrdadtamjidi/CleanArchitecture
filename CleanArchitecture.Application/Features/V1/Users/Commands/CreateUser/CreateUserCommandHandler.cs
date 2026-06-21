@@ -16,25 +16,26 @@ namespace CleanArchitecture.Application.Features.V1.Users.Commands.CreateUser
 {
     public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, ApiResult<CreateUserOutputDto>>
     {
-        private readonly IUserRepository userRepository;
-        private readonly IMapper mapper;
-        public CreateUserCommandHandler(IUserRepository userRepository,IMapper mapper)
+        private readonly IUserRepository _userRepository;
+        private readonly IMapper _mapper;
+
+        public CreateUserCommandHandler(IUserRepository userRepository, IMapper mapper)
         {
-            this.userRepository = userRepository;
-            this.mapper = mapper;
+            _userRepository = userRepository;
+            _mapper = mapper;
         }
         public async Task<ApiResult<CreateUserOutputDto>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
-            bool isDuplicate = await userRepository.IsEmailOrUsernameTakenAsync(request.Email, request.UserName);
+            bool isDuplicate = await _userRepository.IsEmailOrUsernameTakenAsync(request.Email, request.UserName);
 
             if (isDuplicate)
             {
                 return new ApiResult<CreateUserOutputDto>(false, ApiResultStatusCode.BadRequest, null, "Email or username already exists.");
             }
 
-            var user = mapper.Map<User>(request);
+            var user = _mapper.Map<User>(request);
 
-            var createdUser = await userRepository.CreateUserAsync(user);
+            var createdUser = await _userRepository.CreateUserAsync(user);
 
             if (createdUser?.Id > 0)
             {

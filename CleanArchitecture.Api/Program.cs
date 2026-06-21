@@ -4,33 +4,27 @@ using CleanArchitecture.Api.Framework.Middlewares;
 using CleanArchitecture.Api.Framework.Swagger;
 using CleanArchitecture.Application;
 using CleanArchitecture.Application.Common;
-using CleanArchitecture.Application.Contracts.Infrastructure;
 using CleanArchitecture.Infrastructure;
-using CleanArchitecture.Infrastructure.HttpRequest;
 using CleanArchitecture.Persistence;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-
 
 #region Add Site Settings
 builder.Services.Configure<SiteSettings>(builder.Configuration.GetSection(nameof(SiteSettings)));
 var siteSetting = builder.Configuration.GetSection(nameof(SiteSettings)).Get<SiteSettings>();
 #endregion
+
 #region Register Swagger
 builder.Services.AddSwagger();
 #endregion
+
 #region Register ApiVersion
 builder.Services.AddCustomApiVersioning();
 #endregion
+
 #region Register Cors
 builder.Services.RegisterCors(builder.Configuration, builder.Environment);
 #endregion
@@ -43,11 +37,7 @@ builder.Services.AddJwtAuthentication(siteSetting.JwtConfig);
 builder.Services.ConfigureApplicationServices();
 #endregion
 
-#region Register Application Layer
-builder.Services.ConfigureApplicationServices();
-#endregion
-
-#region Register Infrastracture Layer
+#region Register Infrastructure Layer
 builder.Services.ConfigureInfrastractureServices(builder.Configuration);
 #endregion
 
@@ -61,25 +51,16 @@ builder.Services.AddScoped<AddTraceHeaderResultFilter>();
 
 builder.Services.AddHttpContextAccessor();
 
-builder.Services.AddHttpClient<IHttpService, HttpService>(client =>
-{
-    client.Timeout = TimeSpan.FromSeconds(30);
-});
-
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-   // app.MapOpenApi();
+    // app.MapOpenApi();
 }
-
-
 
 #region SwaggerAndUI
 app.UseSwaggerAndUI();
 #endregion
-
 
 app.UseTrace();
 

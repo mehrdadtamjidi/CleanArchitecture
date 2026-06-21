@@ -58,13 +58,6 @@ namespace CleanArchitecture.Api.Framework.Configuration
                 {
                     OnMessageReceived = context =>
                     {
-                        var token = context.Request.Headers["Authorization"].FirstOrDefault();
-
-                        if (!string.IsNullOrWhiteSpace(token))
-                        {
-                            Console.WriteLine("JWT Token received: " + token);
-                        }
-
                         return Task.CompletedTask;
                     },
 
