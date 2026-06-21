@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Builder;
+using CleanArchitecture.Application.Common.Trace;
 using Microsoft.AspNetCore.Http;
 
-
-namespace CleanArchitecture.Application.Common.Trace;
+namespace CleanArchitecture.Api.Framework.Extensions;
 
 public static class TraceExtensions
 {

@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
-using CleanArchitecture.Application.Common.Trace;
+using CleanArchitecture.Api.Framework.Extensions;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace CleanArchitecture.Api.Framework.Filters
 {
@@ -18,7 +18,6 @@ namespace CleanArchitecture.Api.Framework.Filters
                 context.HttpContext.Response.Headers[HeaderName] = traceToken;
             }
 
-            // Continue MVC result pipeline (this is NOT middleware)
             await next();
         }
     }
