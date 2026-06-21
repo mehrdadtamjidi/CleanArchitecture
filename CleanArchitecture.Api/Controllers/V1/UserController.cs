@@ -18,12 +18,13 @@ namespace CleanArchitecture.Api.Controllers.V1
     [ApiVersion("1")]
     public class UserController : BaseController
     {
-        private readonly IMediator mediator;
-        private readonly IMapper mapper;
+        private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
+
         public UserController(IMediator mediator, IMapper mapper)
         {
-            this.mediator = mediator;
-            this.mapper = mapper;
+            _mediator = mediator;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -35,8 +36,8 @@ namespace CleanArchitecture.Api.Controllers.V1
         [AllowAnonymous]
         public async Task<ApiResult<CreateUserOutputDto>> Register(CreateUserInputDto request)
         {
-            var command = mapper.Map<CreateUserCommand>(request);
-            var response = await mediator.Send(command);
+            var command = _mapper.Map<CreateUserCommand>(request);
+            var response = await _mediator.Send(command);
             return response; 
         }
 
@@ -49,8 +50,8 @@ namespace CleanArchitecture.Api.Controllers.V1
         [AllowAnonymous]
         public async Task<ApiResult<LoginUserOutputDto>> Login(LoginUserInputDto request)
         {
-            var query = mapper.Map<LoginUserQuery>(request);
-            var response = await mediator.Send(query);
+            var query = _mapper.Map<LoginUserQuery>(request);
+            var response = await _mediator.Send(query);
             return response;
         }
 
@@ -61,7 +62,7 @@ namespace CleanArchitecture.Api.Controllers.V1
         [AllowAnonymous]
         public async Task<ApiResult<LoginUserOutputDto>> RefreshToken([FromBody] RefreshTokenCommand command)
         {
-            return await mediator.Send(command);
+            return await _mediator.Send(command);
         }
 
         /// <summary>
@@ -74,7 +75,7 @@ namespace CleanArchitecture.Api.Controllers.V1
         public async Task<ApiResult<GetUserByIdOutputDto>> GetUserById(GetUserByIdDto request)
         {
             var query = new GetUserByIdQuery { Id = request.Id };
-            var response = await mediator.Send(query);
+            var response = await _mediator.Send(query);
             return response; 
         } 
 
@@ -88,7 +89,7 @@ namespace CleanArchitecture.Api.Controllers.V1
         public async Task<ApiResult<PaginationResult<GetUsersOutputDto>>> GetUsers(GetUsersQuery request)
         {
             var query = new GetUsersQuery { Page = request.Page , PerPage = request.PerPage };
-            var response = await mediator.Send(request);
+            var response = await _mediator.Send(request);
             return response;
         }
 

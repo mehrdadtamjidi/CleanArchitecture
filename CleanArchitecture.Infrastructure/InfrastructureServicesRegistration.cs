@@ -1,6 +1,5 @@
 ﻿using CleanArchitecture.Application.Contracts.Infrastructure;
 using CleanArchitecture.Infrastructure.Auth;
-using CleanArchitecture.Infrastructure.Auth.CleanArchitecture.Infrastructure.Auth;
 using CleanArchitecture.Infrastructure.HttpRequest;
 using CleanArchitecture.Infrastructure.Mail;
 using CleanArchitecture.Infrastructure.Security;
