@@ -1,5 +1,4 @@
 using Asp.Versioning;
-using AutoMapper;
 using CleanArchitecture.Application.Common;
 using CleanArchitecture.Application.DTOs.SharedModels;
 using CleanArchitecture.Application.DTOs.V1.Users;
@@ -19,12 +18,10 @@ namespace CleanArchitecture.Api.Controllers.V1
     public class UserController : BaseController
     {
         private readonly IMediator _mediator;
-        private readonly IMapper _mapper;
 
-        public UserController(IMediator mediator, IMapper mapper)
+        public UserController(IMediator mediator)
         {
             _mediator = mediator;
-            _mapper = mapper;
         }
 
         /// <summary>Registers a new user in the system.</summary>
@@ -32,8 +29,7 @@ namespace CleanArchitecture.Api.Controllers.V1
         [AllowAnonymous]
         public async Task<ActionResult<CreateUserOutputDto>> Register(CreateUserInputDto request)
         {
-            var command = _mapper.Map<CreateUserCommand>(request);
-            return Ok(await _mediator.Send(command));
+            return Ok(await _mediator.Send(CreateUserCommand.FromDto(request)));
         }
 
         /// <summary>Authenticates a user and returns a token if successful.</summary>
@@ -41,8 +37,7 @@ namespace CleanArchitecture.Api.Controllers.V1
         [AllowAnonymous]
         public async Task<ActionResult<LoginUserOutputDto>> Login(LoginUserInputDto request)
         {
-            var query = _mapper.Map<LoginUserQuery>(request);
-            return Ok(await _mediator.Send(query));
+            return Ok(await _mediator.Send(LoginUserQuery.FromDto(request)));
         }
 
         /// <summary>Issues a new access token using a valid refresh token.</summary>

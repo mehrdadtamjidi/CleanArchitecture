@@ -18,13 +18,7 @@ namespace CleanArchitecture.Application.Features.V1.Users.Queries.GetUsers
         {
             var (users, totalCount) = await _userRepository.GetPaginatedAsync(request.Page, request.PerPage, cancellationToken);
 
-            var dtoList = users.Select(user => new GetUsersOutputDto
-            {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-                UserName = user.UserName
-            }).ToList();
+            var dtoList = users.Select(GetUsersOutputDto.FromEntity).ToList();
 
             return new PaginationResult<GetUsersOutputDto>
             {

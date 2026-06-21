@@ -1,18 +1,9 @@
-﻿using AutoMapper;
-using CleanArchitecture.Application.CustomMapping;
-using CleanArchitecture.Application.Features.V1.Users.Queries.LoginUser;
-
 namespace CleanArchitecture.Application.DTOs.V1.Users
 {
-    public class LoginUserInputDto : IHaveCustomMapping
+    public class LoginUserInputDto
     {
         public string UserName { get; set; }
         public string Password { get; set; }
-
-        public void CreateMappings(Profile profile)
-        {
-            profile.CreateMap<LoginUserInputDto, LoginUserQuery>().ReverseMap();
-        }
     }
 
     public class LoginUserOutputDto

@@ -1,16 +1,8 @@
-﻿using AutoMapper;
-using CleanArchitecture.Application.CustomMapping;
-using CleanArchitecture.Application.Features.V1.Users.Commands.CreateUser;
 using CleanArchitecture.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CleanArchitecture.Application.DTOs.V1.Users
 {
-    public class CreateUserInputDto : IHaveCustomMapping
+    public class CreateUserInputDto
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -18,11 +10,6 @@ namespace CleanArchitecture.Application.DTOs.V1.Users
         public string UserName { get; set; }
         public string Password { get; set; }
         public Gender Gender { get; set; }
-
-        public void CreateMappings(Profile profile)
-        {
-            profile.CreateMap<CreateUserInputDto, CreateUserCommand>().ReverseMap();
-        }
     }
 
     public class CreateUserOutputDto

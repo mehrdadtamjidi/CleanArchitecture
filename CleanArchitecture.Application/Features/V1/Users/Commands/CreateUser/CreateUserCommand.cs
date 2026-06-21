@@ -1,13 +1,10 @@
-using AutoMapper;
-using CleanArchitecture.Application.CustomMapping;
 using CleanArchitecture.Application.DTOs.V1.Users;
-using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Domain.Enums;
 using MediatR;
 
 namespace CleanArchitecture.Application.Features.V1.Users.Commands.CreateUser
 {
-    public class CreateUserCommand : IRequest<CreateUserOutputDto>, IHaveCustomMapping
+    public class CreateUserCommand : IRequest<CreateUserOutputDto>
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -16,10 +13,14 @@ namespace CleanArchitecture.Application.Features.V1.Users.Commands.CreateUser
         public string Password { get; set; }
         public Gender Gender { get; set; }
 
-        public void CreateMappings(Profile profile)
+        public static CreateUserCommand FromDto(CreateUserInputDto dto) => new()
         {
-            profile.CreateMap<CreateUserCommand, User>()
-                .ForMember(dest => dest.PasswordHash, opt => opt.Ignore());
-        }
+            FirstName = dto.FirstName,
+            LastName = dto.LastName,
+            Email = dto.Email,
+            UserName = dto.UserName,
+            Password = dto.Password,
+            Gender = dto.Gender
+        };
     }
 }
