@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Mehrdad Tamjidi",
+  "classifications": [ "Web", "API", "Clean Architecture" ],
+  "identity": "CleanArchitecture.Solution",
+  "name": "Clean Architecture ASP.NET Core",
+  "description": "A Clean Architecture solution template with Domain, Application, Infrastructure, Persistence and API layers.",
+  "shortName": "cleanarch",
+  "tags": {
+    "language": "C#",
+    "type": "solution"
+  },
+  "sourceName": "CleanArchitecture",
+  "preferNameDirectory": true,
+  "sources": [
+    {
+      "modifiers": [
+        {
+          "exclude": [
+            "**/bin/**",
+            "**/obj/**",
+            "**/.git/**",
+            "**/node_modules/**",
+            "**/*.user",
+            "**/.vs/**",
+            "**/Migrations/**"
+          ]
+        }
+      ]
+    }
+  ]
+}
