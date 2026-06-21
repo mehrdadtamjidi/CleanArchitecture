@@ -3,43 +3,44 @@ using CleanArchitecture.Application.Contracts.Infrastructure;
 using CleanArchitecture.Application.Contracts.Persistence;
 using CleanArchitecture.Application.DTOs.V1.Users;
 using CleanArchitecture.Application.Responses;
-using CleanArchitecture.Domain.Entities;
+using RefreshTokenEntity = CleanArchitecture.Domain.Entities.RefreshToken;
 using MediatR;
 using Microsoft.Extensions.Options;
 using System.Security.Cryptography;
 
-namespace CleanArchitecture.Application.Features.V1.Users.Queries.LoginUser
+namespace CleanArchitecture.Application.Features.V1.Users.Commands.RefreshToken
 {
-    public class LoginUserQueryHandler : IRequestHandler<LoginUserQuery, ApiResult<LoginUserOutputDto>>
+    public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, ApiResult<LoginUserOutputDto>>
     {
-        private readonly IUserRepository _userRepository;
         private readonly IRefreshTokenRepository _refreshTokenRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IJwtService _jwtService;
         private readonly SiteSettings _siteSettings;
 
-        public LoginUserQueryHandler(
-            IUserRepository userRepository,
+        public RefreshTokenCommandHandler(
             IRefreshTokenRepository refreshTokenRepository,
+            IUserRepository userRepository,
             IJwtService jwtService,
             IOptionsSnapshot<SiteSettings> siteSettings)
         {
-            _userRepository = userRepository;
             _refreshTokenRepository = refreshTokenRepository;
+            _userRepository = userRepository;
             _jwtService = jwtService;
             _siteSettings = siteSettings.Value;
         }
 
-        public async Task<ApiResult<LoginUserOutputDto>> Handle(LoginUserQuery request, CancellationToken cancellationToken)
+        public async Task<ApiResult<LoginUserOutputDto>> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetByUserNameAndPasswordAsync(request.UserName, request.PasswordHash);
+            var existing = await _refreshTokenRepository.GetByTokenAsync(request.RefreshToken, cancellationToken);
 
-            if (user == null)
-                return new ApiResult<LoginUserOutputDto>(false, ApiResultStatusCode.BadRequest, null, "Invalid username or password");
+            if (existing == null || existing.IsRevoked || existing.ExpiresAt < DateTime.UtcNow)
+                return new ApiResult<LoginUserOutputDto>(false, ApiResultStatusCode.UnAuthorized, null, "Refresh token is invalid or expired.");
 
+            var user = existing.User;
             var securityStamp = Guid.NewGuid().ToString();
             var roles = user.UserRoles.Select(ur => ur.Role.Name).ToList();
 
-            var accessToken = await _jwtService.GenerateToken(new JwtClaimDto
+            var newAccessToken = await _jwtService.GenerateToken(new JwtClaimDto
             {
                 UserId = user.Id,
                 UserName = user.UserName,
@@ -47,22 +48,23 @@ namespace CleanArchitecture.Application.Features.V1.Users.Queries.LoginUser
                 Role = roles
             });
 
-            var refreshToken = new RefreshToken
+            var newRefreshToken = new RefreshTokenEntity
             {
                 Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
                 UserId = user.Id,
                 ExpiresAt = DateTime.UtcNow.AddDays(_siteSettings.JwtConfig.RefreshTokenExpirationDays)
             };
 
+            await _refreshTokenRepository.RevokeAsync(existing, cancellationToken);
+            await _refreshTokenRepository.CreateAsync(newRefreshToken, cancellationToken);
             await _userRepository.UpdateSecurityStampAsync(user.Id, securityStamp);
-            await _refreshTokenRepository.CreateAsync(refreshToken, cancellationToken);
 
             return new ApiResult<LoginUserOutputDto>(true, ApiResultStatusCode.Success, new LoginUserOutputDto
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                AccessToken = accessToken,
-                RefreshToken = refreshToken.Token
+                AccessToken = newAccessToken,
+                RefreshToken = newRefreshToken.Token
             });
         }
     }

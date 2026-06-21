@@ -3,6 +3,7 @@ using AutoMapper;
 using CleanArchitecture.Application.DTOs.SharedModels;
 using CleanArchitecture.Application.DTOs.V1.Users;
 using CleanArchitecture.Application.Features.V1.Users.Commands.CreateUser;
+using CleanArchitecture.Application.Features.V1.Users.Commands.RefreshToken;
 using CleanArchitecture.Application.Features.V1.Users.Queries.GetUser;
 using CleanArchitecture.Application.Features.V1.Users.Queries.GetUsers;
 using CleanArchitecture.Application.Features.V1.Users.Queries.LoginUser;
@@ -51,6 +52,16 @@ namespace CleanArchitecture.Api.Controllers.V1
             var query = mapper.Map<LoginUserQuery>(request);
             var response = await mediator.Send(query);
             return response;
+        }
+
+        /// <summary>
+        /// Issues a new access token using a valid refresh token.
+        /// </summary>
+        [HttpPost("RefreshToken")]
+        [AllowAnonymous]
+        public async Task<ApiResult<LoginUserOutputDto>> RefreshToken([FromBody] RefreshTokenCommand command)
+        {
+            return await mediator.Send(command);
         }
 
         /// <summary>

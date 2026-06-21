@@ -46,9 +46,7 @@ namespace CleanArchitecture.Infrastructure.Auth
                     Audience = siteSettings.JwtConfig.Audience,
                     IssuedAt = DateTime.UtcNow,
                     NotBefore = DateTime.UtcNow.AddMinutes(siteSettings.JwtConfig.NotBeforeMinutes),
-                    Expires = input.Remember
-                        ? DateTime.UtcNow.AddDays(siteSettings.JwtConfig.ExpirationDays)
-                        : DateTime.UtcNow.AddMinutes(siteSettings.JwtConfig.ExpirationMinutes),
+                    Expires = DateTime.UtcNow.AddMinutes(siteSettings.JwtConfig.ExpirationMinutes),
                     SigningCredentials = signingCredentials,
                     EncryptingCredentials = encryptingCredentials,
                     Subject = new ClaimsIdentity(jwtClaims)
