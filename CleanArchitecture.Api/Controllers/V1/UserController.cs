@@ -5,7 +5,7 @@ using CleanArchitecture.Application.DTOs.V1.Users;
 using CleanArchitecture.Application.Features.V1.Users.Commands.CreateUser;
 using CleanArchitecture.Application.Features.V1.Users.Commands.Logout;
 using CleanArchitecture.Application.Features.V1.Users.Commands.RefreshToken;
-using CleanArchitecture.Application.Features.V1.Users.Queries.GetUser;
+using CleanArchitecture.Application.Features.V1.Users.Queries.GetUserById;
 using CleanArchitecture.Application.Features.V1.Users.Queries.GetUsers;
 using CleanArchitecture.Application.Features.V1.Users.Commands.LoginUser;
 using MediatR;

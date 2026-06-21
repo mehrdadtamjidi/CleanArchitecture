@@ -1,11 +1,6 @@
-﻿using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using FluentValidation;
 
-namespace CleanArchitecture.Application.Features.V1.Users.Queries.GetUser
+namespace CleanArchitecture.Application.Features.V1.Users.Queries.GetUserById
 {
     public class GetUserByIdQueryValidator : AbstractValidator<GetUserByIdQuery>
     {
@@ -13,7 +8,7 @@ namespace CleanArchitecture.Application.Features.V1.Users.Queries.GetUser
         {
             RuleFor(u => u.Id)
                 .NotEmpty()
-                .WithMessage("this field is Required");
+                .WithMessage("Id is required.");
         }
     }
 }
