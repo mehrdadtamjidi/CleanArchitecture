@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CleanArchitecture.Application.DTOs.V1.Users
+namespace CleanArchitecture.Application.DTOs.Shared
 {
     public class JwtClaimDto
     {

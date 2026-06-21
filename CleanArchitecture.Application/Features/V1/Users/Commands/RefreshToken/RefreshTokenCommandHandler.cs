@@ -2,6 +2,7 @@ using CleanArchitecture.Application.Common;
 using CleanArchitecture.Application.Common.Exceptions;
 using CleanArchitecture.Application.Contracts.Infrastructure;
 using CleanArchitecture.Application.Contracts.Persistence;
+using CleanArchitecture.Application.DTOs.Shared;
 using CleanArchitecture.Application.DTOs.V1.Users;
 using RefreshTokenEntity = CleanArchitecture.Domain.Entities.RefreshToken;
 using MediatR;
