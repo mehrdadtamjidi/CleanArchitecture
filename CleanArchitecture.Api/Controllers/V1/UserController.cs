@@ -61,7 +61,7 @@ namespace CleanArchitecture.Api.Controllers.V1
         /// <summary>Retrieves a user by their unique ID.</summary>
         [HttpPost("GetUserById")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<GetUserByIdOutputDto>> GetUserById(GetUserByIdDto request)
+        public async Task<ActionResult<GetUserByIdOutputDto>> GetUserById(GetUserByIdInputDto request)
         {
             return Ok(await _mediator.Send(new GetUserByIdQuery { Id = request.Id }));
         }

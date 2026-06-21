@@ -2,7 +2,7 @@ using CleanArchitecture.Domain.Entities;
 
 namespace CleanArchitecture.Application.DTOs.V1.Users
 {
-    public class GetUserByIdDto
+    public class GetUserByIdInputDto
     {
         public int Id { get; set; }
     }
