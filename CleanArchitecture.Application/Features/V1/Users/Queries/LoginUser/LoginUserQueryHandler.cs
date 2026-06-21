@@ -1,8 +1,8 @@
 using CleanArchitecture.Application.Common;
+using CleanArchitecture.Application.Common.Exceptions;
 using CleanArchitecture.Application.Contracts.Infrastructure;
 using CleanArchitecture.Application.Contracts.Persistence;
 using CleanArchitecture.Application.DTOs.V1.Users;
-using CleanArchitecture.Application.Responses;
 using CleanArchitecture.Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Options;
@@ -10,7 +10,7 @@ using System.Security.Cryptography;
 
 namespace CleanArchitecture.Application.Features.V1.Users.Queries.LoginUser
 {
-    public class LoginUserQueryHandler : IRequestHandler<LoginUserQuery, ApiResult<LoginUserOutputDto>>
+    public class LoginUserQueryHandler : IRequestHandler<LoginUserQuery, LoginUserOutputDto>
     {
         private readonly IUserRepository _userRepository;
         private readonly IRefreshTokenRepository _refreshTokenRepository;
@@ -29,12 +29,12 @@ namespace CleanArchitecture.Application.Features.V1.Users.Queries.LoginUser
             _siteSettings = siteSettings.Value;
         }
 
-        public async Task<ApiResult<LoginUserOutputDto>> Handle(LoginUserQuery request, CancellationToken cancellationToken)
+        public async Task<LoginUserOutputDto> Handle(LoginUserQuery request, CancellationToken cancellationToken)
         {
             var user = await _userRepository.GetByUserNameAndPasswordAsync(request.UserName, request.PasswordHash);
 
             if (user == null)
-                return new ApiResult<LoginUserOutputDto>(false, ApiResultStatusCode.BadRequest, null, "Invalid username or password");
+                throw new BadRequestException("Invalid username or password.");
 
             var securityStamp = Guid.NewGuid().ToString();
             var roles = user.UserRoles.Select(ur => ur.Role.Name).ToList();
@@ -57,13 +57,13 @@ namespace CleanArchitecture.Application.Features.V1.Users.Queries.LoginUser
             await _userRepository.UpdateSecurityStampAsync(user.Id, securityStamp);
             await _refreshTokenRepository.CreateAsync(refreshToken, cancellationToken);
 
-            return new ApiResult<LoginUserOutputDto>(true, ApiResultStatusCode.Success, new LoginUserOutputDto
+            return new LoginUserOutputDto
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 AccessToken = accessToken,
                 RefreshToken = refreshToken.Token
-            });
+            };
         }
     }
 }

@@ -1,39 +1,33 @@
-﻿using AutoMapper;
+using CleanArchitecture.Application.Common.Exceptions;
 using CleanArchitecture.Application.Contracts.Persistence;
 using CleanArchitecture.Application.DTOs.V1.Users;
-using CleanArchitecture.Application.Responses;
 using MediatR;
 
 namespace CleanArchitecture.Application.Features.V1.Users.Queries.GetUser
 {
-    public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, ApiResult<GetUserByIdOutputDto>>
+    public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, GetUserByIdOutputDto>
     {
-        private readonly IUserRepository userRepository;
-        private readonly IMapper mapper;
-        public GetUserByIdQueryHandler(IUserRepository userRepository, IMapper mapper)
+        private readonly IUserRepository _userRepository;
+
+        public GetUserByIdQueryHandler(IUserRepository userRepository)
         {
-            this.userRepository = userRepository;
-            this.mapper = mapper;
+            _userRepository = userRepository;
         }
-        public async Task<ApiResult<GetUserByIdOutputDto>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
+
+        public async Task<GetUserByIdOutputDto> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
         {
-            var user = await userRepository.GetByIdAsync(cancellationToken, request.Id);
+            var user = await _userRepository.GetByIdAsync(cancellationToken, request.Id);
 
             if (user == null)
-            {
-                return new ApiResult<GetUserByIdOutputDto>(false, ApiResultStatusCode.NotFound, null);
-            }
+                throw new NotFoundException($"User with id {request.Id} not found.");
 
-            var getUserByIdOutputDto =  new GetUserByIdOutputDto
+            return new GetUserByIdOutputDto
             {
-               FirstName = user.FirstName,
-               LastName = user.LastName,
-               Email = user.Email,
-               UserName = user.UserName
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                UserName = user.UserName
             };
-
-            return new ApiResult<GetUserByIdOutputDto>(true, ApiResultStatusCode.Success, getUserByIdOutputDto);
-
         }
     }
 }

@@ -2,13 +2,11 @@
 using CleanArchitecture.Application.Common;
 using CleanArchitecture.Application.Common.Exceptions;
 using CleanArchitecture.Application.Contracts.Persistence;
-using CleanArchitecture.Application.Responses;
 using CleanArchitecture.Persistence.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using System.Net;
 using System.Security.Claims;
 using System.Text;
 
@@ -72,7 +70,7 @@ namespace CleanArchitecture.Api.Framework.Configuration
                             return Task.CompletedTask;
                         }
 
-                        throw new AppException(ApiResultStatusCode.UnAuthorized, "Authentication failed", HttpStatusCode.Unauthorized);
+                        throw new UnauthorizedException("Authentication failed.");
                     },
 
                     OnTokenValidated = async context =>
@@ -124,10 +122,10 @@ namespace CleanArchitecture.Api.Framework.Configuration
 
                         if (context.AuthenticateFailure != null)
                         {
-                            throw new AppException(ApiResultStatusCode.UnAuthorized, "Authentication error", HttpStatusCode.OK, context.AuthenticateFailure, null);
+                            throw new UnauthorizedException("Authentication error.");
                         }
 
-                        throw new AppException(ApiResultStatusCode.UnAuthorized, "Authentication error", HttpStatusCode.Unauthorized);
+                        throw new UnauthorizedException("Authentication error.");
                     }
                 };
             });

@@ -1,10 +1,9 @@
 using CleanArchitecture.Application.Contracts.Persistence;
-using CleanArchitecture.Application.Responses;
 using MediatR;
 
 namespace CleanArchitecture.Application.Features.V1.Users.Commands.Logout
 {
-    public class LogoutCommandHandler : IRequestHandler<LogoutCommand, ApiResult>
+    public class LogoutCommandHandler : IRequestHandler<LogoutCommand, Unit>
     {
         private readonly IRefreshTokenRepository _refreshTokenRepository;
         private readonly IUserRepository _userRepository;
@@ -17,12 +16,11 @@ namespace CleanArchitecture.Application.Features.V1.Users.Commands.Logout
             _userRepository = userRepository;
         }
 
-        public async Task<ApiResult> Handle(LogoutCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(LogoutCommand request, CancellationToken cancellationToken)
         {
             await _refreshTokenRepository.RevokeAllByUserIdAsync(request.UserId, cancellationToken);
             await _userRepository.UpdateSecurityStampAsync(request.UserId, Guid.NewGuid().ToString());
-
-            return new ApiResult(true, ApiResultStatusCode.Success);
+            return Unit.Value;
         }
     }
 }

@@ -20,7 +20,6 @@ namespace CleanArchitecture.Application.UnitTests.Mocks
             };
 
             var mockRepo = new Mock<IUserRepository>();
-            mockRepo.Setup(r => r.TableNoTracking.ToList()).Returns(users);
 
             mockRepo.Setup(r => r.AddAsync(It.IsAny<User>(), It.IsAny<CancellationToken>(), It.IsAny<bool>()))
                 .ReturnsAsync((User user, CancellationToken token, bool saveNow) =>

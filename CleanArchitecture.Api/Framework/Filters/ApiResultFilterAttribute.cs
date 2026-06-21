@@ -1,9 +1,7 @@
-﻿using CleanArchitecture.Application.Responses;
+using CleanArchitecture.Api.Framework.Responses;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-
-
-
 
 namespace CleanArchitecture.Api.Framework.Filters
 {
@@ -16,7 +14,7 @@ namespace CleanArchitecture.Api.Framework.Filters
                 var apiResult = new ApiResult<object>(true, ApiResultStatusCode.Success, okObjectResult.Value);
                 context.Result = new JsonResult(apiResult) { StatusCode = okObjectResult.StatusCode };
             }
-            else if (context.Result is OkResult okResult) 
+            else if (context.Result is OkResult okResult)
             {
                 var apiResult = new ApiResult(true, ApiResultStatusCode.Success);
                 context.Result = new JsonResult(apiResult) { StatusCode = okResult.StatusCode };
@@ -28,12 +26,9 @@ namespace CleanArchitecture.Api.Framework.Filters
             }
             else if (context.Result is BadRequestObjectResult badRequestObjectResult)
             {
-                System.Reflection.PropertyInfo pi = badRequestObjectResult.Value.GetType().GetProperty("Errors");
-                Dictionary<string, string[]> errors = (Dictionary<string, string[]>)pi.GetValue(badRequestObjectResult.Value, null);
-
-                var message = badRequestObjectResult.ToString();
-                var errorMessage = errors.SelectMany(p => p.Value).Distinct();
-                message = string.Join(" | ", errorMessage);
+                var pi = badRequestObjectResult.Value.GetType().GetProperty("Errors");
+                var errors = (Dictionary<string, string[]>)pi.GetValue(badRequestObjectResult.Value, null);
+                var message = string.Join(" | ", errors.SelectMany(p => p.Value).Distinct());
 
                 var apiResult = new ApiResult(false, ApiResultStatusCode.BadRequest, message);
                 context.Result = new JsonResult(apiResult) { StatusCode = StatusCodes.Status400BadRequest };
@@ -53,48 +48,29 @@ namespace CleanArchitecture.Api.Framework.Filters
                 var apiResult = new ApiResult<object>(false, ApiResultStatusCode.NotFound, notFoundObjectResult.Value);
                 context.Result = new JsonResult(apiResult) { StatusCode = notFoundObjectResult.StatusCode };
             }
-            else if (context.Result is ObjectResult objectResult && objectResult.StatusCode == null
-                && !(objectResult.Value is ApiResult))
+            else if (context.Result is ObjectResult objectResult)
             {
-                var apiResult = new ApiResult<object>(true, ApiResultStatusCode.Success, objectResult.Value);
-                context.Result = new JsonResult(apiResult) { StatusCode = objectResult.StatusCode };
-            }
-            else if (context.Result is ObjectResult result)
-            {
-                if (result.Value is ApiResult apiResultValue)
+                if (objectResult.Value is ApiResult existingApiResult)
                 {
-                    if (result.StatusCode == null)
+                    if (objectResult.StatusCode == null)
                     {
-                        if (apiResultValue.IsSuccess)
-                        {
-                            result.StatusCode = StatusCodes.Status200OK;
-                        }
-                        else
-                        {
-                            result.StatusCode = apiResultValue.StatusCode switch
+                        objectResult.StatusCode = existingApiResult.IsSuccess
+                            ? StatusCodes.Status200OK
+                            : existingApiResult.StatusCode switch
                             {
                                 ApiResultStatusCode.NotFound => StatusCodes.Status404NotFound,
                                 ApiResultStatusCode.BadRequest => StatusCodes.Status400BadRequest,
                                 ApiResultStatusCode.UnAuthorized => StatusCodes.Status401Unauthorized,
-                                ApiResultStatusCode.ServerError => StatusCodes.Status500InternalServerError,
-                                ApiResultStatusCode.LogicError => StatusCodes.Status500InternalServerError,
-                                _ => StatusCodes.Status400BadRequest
+                                ApiResultStatusCode.LogicError => StatusCodes.Status422UnprocessableEntity,
+                                _ => StatusCodes.Status500InternalServerError
                             };
-                        }
                     }
-
-                    context.Result = new JsonResult(apiResultValue)
-                    {
-                        StatusCode = result.StatusCode
-                    };
+                    context.Result = new JsonResult(existingApiResult) { StatusCode = objectResult.StatusCode };
                 }
-                else if (result.StatusCode == null)
+                else
                 {
-                    var apiResult = new ApiResult<object>(true, ApiResultStatusCode.Success, result.Value);
-                    context.Result = new JsonResult(apiResult)
-                    {
-                        StatusCode = StatusCodes.Status200OK
-                    };
+                    var apiResult = new ApiResult<object>(true, ApiResultStatusCode.Success, objectResult.Value);
+                    context.Result = new JsonResult(apiResult) { StatusCode = StatusCodes.Status200OK };
                 }
             }
 

@@ -1,7 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Xml.Linq;
+using System.ComponentModel.DataAnnotations;
 
-namespace CleanArchitecture.Application.Responses
+namespace CleanArchitecture.Api.Framework.Responses
 {
     public enum ApiResultStatusCode
     {

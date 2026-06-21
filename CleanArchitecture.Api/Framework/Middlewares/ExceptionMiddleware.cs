@@ -1,30 +1,31 @@
-﻿using System;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
+using CleanArchitecture.Api.Framework.Responses;
 using CleanArchitecture.Application.Common.Exceptions;
-using CleanArchitecture.Application.Responses;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
+using System.Net;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace CleanArchitecture.Api.Framework.Middlewares
 {
     public static class GlobalExceptionMiddlewareExtensions
     {
         public static IApplicationBuilder UseGlobalExceptionMiddleware(this IApplicationBuilder builder)
-        {
-            return builder.UseMiddleware<GlobalExceptionMiddleware>();
-        }
+            => builder.UseMiddleware<GlobalExceptionMiddleware>();
     }
 
     public class GlobalExceptionMiddleware
     {
         private readonly RequestDelegate _next;
         private readonly IHostEnvironment _env;
+
+        private static readonly JsonSerializerOptions _jsonOptions = new()
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+        };
 
         public GlobalExceptionMiddleware(RequestDelegate next, IHostEnvironment env)
         {
@@ -56,40 +57,36 @@ namespace CleanArchitecture.Api.Framework.Middlewares
             {
                 statusCode = (int)HttpStatusCode.BadRequest;
                 apiStatusCode = ApiResultStatusCode.BadRequest;
-
-                var allErrors = validationException.Errors
-                    .SelectMany(e => e.Value)
-                    .Distinct()
-                    .ToList();
-
-                message = string.Join(" | ", allErrors);
+                message = string.Join(" | ", validationException.Errors.SelectMany(e => e.Value).Distinct());
             }
             else if (exception is AppException appException)
             {
                 statusCode = (int)appException.HttpStatusCode;
-                apiStatusCode = appException.ApiStatusCode;
+                apiStatusCode = MapToApiStatusCode(appException.HttpStatusCode);
                 message = appException.Message;
             }
             else
             {
                 statusCode = (int)HttpStatusCode.InternalServerError;
                 apiStatusCode = ApiResultStatusCode.ServerError;
-
                 message = _env.IsDevelopment()
                     ? $"{exception.Message} | {exception.StackTrace}"
                     : "An unexpected error occurred.";
             }
 
             context.Response.StatusCode = statusCode;
-
             var result = new ApiResult(false, apiStatusCode, message);
-            var settings = new JsonSerializerSettings
-            {
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            };
-
-            var json = JsonConvert.SerializeObject(result, settings);
-            await context.Response.WriteAsync(json);
+            await context.Response.WriteAsync(JsonSerializer.Serialize(result, _jsonOptions));
         }
+
+        private static ApiResultStatusCode MapToApiStatusCode(HttpStatusCode httpStatusCode) => httpStatusCode switch
+        {
+            HttpStatusCode.BadRequest => ApiResultStatusCode.BadRequest,
+            HttpStatusCode.Unauthorized => ApiResultStatusCode.UnAuthorized,
+            HttpStatusCode.Forbidden => ApiResultStatusCode.UnAuthorized,
+            HttpStatusCode.NotFound => ApiResultStatusCode.NotFound,
+            HttpStatusCode.UnprocessableEntity => ApiResultStatusCode.LogicError,
+            _ => ApiResultStatusCode.ServerError
+        };
     }
 }

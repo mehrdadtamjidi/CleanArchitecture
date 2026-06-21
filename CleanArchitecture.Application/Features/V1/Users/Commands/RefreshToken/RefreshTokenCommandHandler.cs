@@ -1,8 +1,8 @@
 using CleanArchitecture.Application.Common;
+using CleanArchitecture.Application.Common.Exceptions;
 using CleanArchitecture.Application.Contracts.Infrastructure;
 using CleanArchitecture.Application.Contracts.Persistence;
 using CleanArchitecture.Application.DTOs.V1.Users;
-using CleanArchitecture.Application.Responses;
 using RefreshTokenEntity = CleanArchitecture.Domain.Entities.RefreshToken;
 using MediatR;
 using Microsoft.Extensions.Options;
@@ -10,7 +10,7 @@ using System.Security.Cryptography;
 
 namespace CleanArchitecture.Application.Features.V1.Users.Commands.RefreshToken
 {
-    public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, ApiResult<LoginUserOutputDto>>
+    public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, LoginUserOutputDto>
     {
         private readonly IRefreshTokenRepository _refreshTokenRepository;
         private readonly IUserRepository _userRepository;
@@ -29,12 +29,12 @@ namespace CleanArchitecture.Application.Features.V1.Users.Commands.RefreshToken
             _siteSettings = siteSettings.Value;
         }
 
-        public async Task<ApiResult<LoginUserOutputDto>> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
+        public async Task<LoginUserOutputDto> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
         {
             var existing = await _refreshTokenRepository.GetByTokenAsync(request.RefreshToken, cancellationToken);
 
             if (existing == null || existing.IsRevoked || existing.ExpiresAt < DateTime.UtcNow)
-                return new ApiResult<LoginUserOutputDto>(false, ApiResultStatusCode.UnAuthorized, null, "Refresh token is invalid or expired.");
+                throw new UnauthorizedException("Refresh token is invalid or expired.");
 
             var user = existing.User;
             var securityStamp = Guid.NewGuid().ToString();
@@ -59,13 +59,13 @@ namespace CleanArchitecture.Application.Features.V1.Users.Commands.RefreshToken
             await _refreshTokenRepository.CreateAsync(newRefreshToken, cancellationToken);
             await _userRepository.UpdateSecurityStampAsync(user.Id, securityStamp);
 
-            return new ApiResult<LoginUserOutputDto>(true, ApiResultStatusCode.Success, new LoginUserOutputDto
+            return new LoginUserOutputDto
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 AccessToken = newAccessToken,
                 RefreshToken = newRefreshToken.Token
-            });
+            };
         }
     }
 }

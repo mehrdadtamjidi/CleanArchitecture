@@ -1,7 +1,7 @@
 using CleanArchitecture.Application.Common;
 using System.Text.Json.Serialization;
 
-namespace CleanArchitecture.Application.Responses
+namespace CleanArchitecture.Api.Framework.Responses
 {
     public class ApiResult
     {
@@ -10,9 +10,9 @@ namespace CleanArchitecture.Application.Responses
         public DateTime DateTime { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string Message { get; set; }
+        public string? Message { get; set; }
 
-        public ApiResult(bool isSuccess, ApiResultStatusCode statusCode, string message = null)
+        public ApiResult(bool isSuccess, ApiResultStatusCode statusCode, string? message = null)
         {
             IsSuccess = isSuccess;
             StatusCode = statusCode;
@@ -25,9 +25,9 @@ namespace CleanArchitecture.Application.Responses
         where TData : class
     {
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public TData Data { get; set; }
+        public TData? Data { get; set; }
 
-        public ApiResult(bool isSuccess, ApiResultStatusCode statusCode, TData data, string message = null)
+        public ApiResult(bool isSuccess, ApiResultStatusCode statusCode, TData? data, string? message = null)
             : base(isSuccess, statusCode, message)
         {
             Data = data;
