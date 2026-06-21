@@ -15,9 +15,9 @@ namespace CleanArchitecture.Application.Features.V1.Users.Queries.LoginUser
                 .NotEmpty()
                 .WithMessage($"{nameof(LoginUserQuery.UserName)} is required.");
 
-            RuleFor(u => u.PasswordHash)
+            RuleFor(u => u.Password)
                 .NotEmpty()
-                .WithMessage($"{nameof(LoginUserQuery.PasswordHash)} is required.");
+                .WithMessage("Password is required.");
         }
     }
 }

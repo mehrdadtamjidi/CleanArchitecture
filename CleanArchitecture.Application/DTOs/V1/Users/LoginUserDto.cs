@@ -7,7 +7,7 @@ namespace CleanArchitecture.Application.DTOs.V1.Users
     public class LoginUserInputDto : IHaveCustomMapping
     {
         public string UserName { get; set; }
-        public string PasswordHash { get; set; }
+        public string Password { get; set; }
 
         public void CreateMappings(Profile profile)
         {

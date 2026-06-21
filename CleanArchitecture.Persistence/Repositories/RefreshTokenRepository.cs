@@ -4,25 +4,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Persistence.Repositories
 {
-    public class RefreshTokenRepository : IRefreshTokenRepository
+    public class RefreshTokenRepository : GenericRepository<RefreshToken>, IRefreshTokenRepository
     {
-        private readonly ApplicationDbContext _dbContext;
-
         public RefreshTokenRepository(ApplicationDbContext dbContext)
+            : base(dbContext)
         {
-            _dbContext = dbContext;
         }
 
         public async Task<RefreshToken> CreateAsync(RefreshToken refreshToken, CancellationToken cancellationToken = default)
         {
-            await _dbContext.RefreshTokens.AddAsync(refreshToken, cancellationToken);
-            await _dbContext.SaveChangesAsync(cancellationToken);
-            return refreshToken;
+            return await AddAsync(refreshToken, cancellationToken);
         }
 
         public async Task<RefreshToken?> GetByTokenAsync(string token, CancellationToken cancellationToken = default)
         {
-            return await _dbContext.RefreshTokens
+            return await Table
                 .Include(x => x.User)
                     .ThenInclude(u => u.UserRoles)
                     .ThenInclude(ur => ur.Role)
@@ -32,19 +28,19 @@ namespace CleanArchitecture.Persistence.Repositories
         public async Task RevokeAsync(RefreshToken refreshToken, CancellationToken cancellationToken = default)
         {
             refreshToken.IsRevoked = true;
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            await SaveChangesAsync(cancellationToken);
         }
 
         public async Task RevokeAllByUserIdAsync(int userId, CancellationToken cancellationToken = default)
         {
-            var tokens = await _dbContext.RefreshTokens
+            var tokens = await Table
                 .Where(x => x.UserId == userId && !x.IsRevoked)
                 .ToListAsync(cancellationToken);
 
             foreach (var token in tokens)
                 token.IsRevoked = true;
 
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            await SaveChangesAsync(cancellationToken);
         }
     }
 }

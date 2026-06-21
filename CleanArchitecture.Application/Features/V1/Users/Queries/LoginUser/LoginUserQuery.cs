@@ -9,11 +9,12 @@ namespace CleanArchitecture.Application.Features.V1.Users.Queries.LoginUser
     public class LoginUserQuery : IRequest<LoginUserOutputDto>, IHaveCustomMapping
     {
         public string UserName { get; set; }
-        public string PasswordHash { get; set; }
+        public string Password { get; set; }
 
         public void CreateMappings(Profile profile)
         {
-            profile.CreateMap<LoginUserQuery, User>();
+            profile.CreateMap<LoginUserQuery, User>()
+                .ForMember(dest => dest.PasswordHash, opt => opt.Ignore());
         }
     }
 }

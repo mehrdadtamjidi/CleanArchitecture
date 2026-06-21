@@ -15,25 +15,28 @@ namespace CleanArchitecture.Application.Features.V1.Users.Queries.LoginUser
         private readonly IUserRepository _userRepository;
         private readonly IRefreshTokenRepository _refreshTokenRepository;
         private readonly IJwtService _jwtService;
+        private readonly IPasswordHasher _passwordHasher;
         private readonly SiteSettings _siteSettings;
 
         public LoginUserQueryHandler(
             IUserRepository userRepository,
             IRefreshTokenRepository refreshTokenRepository,
             IJwtService jwtService,
+            IPasswordHasher passwordHasher,
             IOptionsSnapshot<SiteSettings> siteSettings)
         {
             _userRepository = userRepository;
             _refreshTokenRepository = refreshTokenRepository;
             _jwtService = jwtService;
+            _passwordHasher = passwordHasher;
             _siteSettings = siteSettings.Value;
         }
 
         public async Task<LoginUserOutputDto> Handle(LoginUserQuery request, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetByUserNameAndPasswordAsync(request.UserName, request.PasswordHash);
+            var user = await _userRepository.GetByUsernameAsync(request.UserName);
 
-            if (user == null)
+            if (user == null || !_passwordHasher.VerifyPassword(request.Password, user.PasswordHash))
                 throw new BadRequestException("Invalid username or password.");
 
             var securityStamp = Guid.NewGuid().ToString();

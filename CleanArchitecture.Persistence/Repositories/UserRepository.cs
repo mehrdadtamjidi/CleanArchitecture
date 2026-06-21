@@ -1,30 +1,19 @@
-﻿using CleanArchitecture.Application.Contracts.Infrastructure;
 using CleanArchitecture.Application.Contracts.Persistence;
 using CleanArchitecture.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CleanArchitecture.Persistence.Repositories
 {
     public class UserRepository : GenericRepository<User>, IUserRepository
     {
-        private readonly IPasswordHasher _passwordHasher;
-
-        public UserRepository(ApplicationDbContext dbContext, IPasswordHasher passwordHasher)
+        public UserRepository(ApplicationDbContext dbContext)
             : base(dbContext)
         {
-            _passwordHasher = passwordHasher;
         }
 
         public async Task<User?> CreateUserAsync(User user)
         {
-            user.PasswordHash = _passwordHasher.HashPassword(user.PasswordHash);
             user.SecurityStamp = Guid.NewGuid().ToString();
-
             return await AddAsync(user);
         }
 
@@ -32,6 +21,14 @@ namespace CleanArchitecture.Persistence.Repositories
         {
             return await TableNoTracking
                 .FirstOrDefaultAsync(u => u.Email == email);
+        }
+
+        public async Task<User?> GetByUsernameAsync(string userName)
+        {
+            return await Table
+                .Include(u => u.UserRoles)
+                    .ThenInclude(ur => ur.Role)
+                .FirstOrDefaultAsync(u => u.UserName.ToLower() == userName.ToLower());
         }
 
         public async Task<bool> ChangePasswordAsync(int userId, string newPasswordHash)
@@ -44,7 +41,7 @@ namespace CleanArchitecture.Persistence.Repositories
             user.SecurityStamp = Guid.NewGuid().ToString();
             user.DateModified = DateTime.UtcNow;
 
-            await UpdateAsync(user,default);
+            await UpdateAsync(user);
             return true;
         }
 
@@ -53,21 +50,6 @@ namespace CleanArchitecture.Persistence.Repositories
             return await TableNoTracking.AnyAsync(u =>
                 u.Email.ToLower() == email.ToLower() ||
                 u.UserName.ToLower() == userName.ToLower());
-        }
-
-        public async Task<User?> GetByUserNameAndPasswordAsync(string userName, string passwordHash)
-        {
-            var user = await Table
-                .Include(u => u.UserRoles)
-                .ThenInclude(ur => ur.Role)
-                .FirstOrDefaultAsync(u => u.UserName.ToLower() == userName.ToLower());
-
-            if (user is null)
-                return null;
-
-            bool isValidPassword = _passwordHasher.VerifyPassword(passwordHash, user.PasswordHash);
-
-            return isValidPassword ? user : null;
         }
 
         public async Task<(List<User> Users, long TotalCount)> GetPaginatedAsync(int page, int perPage, CancellationToken cancellationToken)
@@ -84,7 +66,7 @@ namespace CleanArchitecture.Persistence.Repositories
             return (users, totalCount);
         }
 
-        public async Task<bool> UpdateSecurityStampAsync(int userId,string securityStamp)
+        public async Task<bool> UpdateSecurityStampAsync(int userId, string securityStamp)
         {
             var user = await GetByIdAsync(default, userId);
 
@@ -94,7 +76,7 @@ namespace CleanArchitecture.Persistence.Repositories
             user.SecurityStamp = securityStamp;
             user.DateModified = DateTime.UtcNow;
 
-            await UpdateAsync(user, default);
+            await UpdateAsync(user);
             return true;
         }
     }

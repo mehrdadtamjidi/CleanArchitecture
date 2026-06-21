@@ -13,12 +13,13 @@ namespace CleanArchitecture.Application.Features.V1.Users.Commands.CreateUser
         public string LastName { get; set; }
         public string Email { get; set; }
         public string UserName { get; set; }
-        public string PasswordHash { get; set; }
+        public string Password { get; set; }
         public Gender Gender { get; set; }
 
         public void CreateMappings(Profile profile)
         {
-            profile.CreateMap<CreateUserCommand, User>();
+            profile.CreateMap<CreateUserCommand, User>()
+                .ForMember(dest => dest.PasswordHash, opt => opt.Ignore());
         }
     }
 }
